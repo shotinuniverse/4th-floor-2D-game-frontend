@@ -4,8 +4,12 @@ module com.shotinuniverse.fourthfloorgamefrontend {
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
-    requires jackson.databind;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.annotation;
 
     opens com.shotinuniverse.fourthfloorgamefrontend to javafx.fxml;
     exports com.shotinuniverse.fourthfloorgamefrontend;
+    exports com.shotinuniverse.fourthfloorgamefrontend.menu;
+    opens com.shotinuniverse.fourthfloorgamefrontend.menu to javafx.fxml;
 }

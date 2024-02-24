@@ -13,7 +13,7 @@ repositories {
 }
 
 ext {
-    junitVersion = '5.8.2'
+    junitVersion = '5.9.2'
 }
 
 sourceCompatibility = '17'
@@ -25,7 +25,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.shotinuniverse.fourthfloorgamefrontend'
-    mainClass = 'com.shotinuniverse.fourthfloorgamefrontend.HelloApplication'
+    mainClass = 'com.shotinuniverse.fourthfloorgamefrontend.Main'
 }
 
 javafx {
@@ -34,15 +34,15 @@ javafx {
 }
 
 dependencies {
-    implementation('org.controlsfx:controlsfx:11.1.1')
-    implementation('com.dlsc.formsfx:formsfx-core:11.3.2') {
+    implementation('org.controlsfx:controlsfx:11.1.2')
+    implementation('com.dlsc.formsfx:formsfx-core:11.6.0') {
         exclude(group: 'org.openjfx')
     }
 
-    implementation('junit:junit:4.10')
+    implementation('junit:junit:4.13.2')
     implementation('org.glassfish.jaxb:jaxb-runtime:4.0.4')
-    implementation('io.vavr:vavr:0.10.1')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.8.9')
+    implementation('io.vavr:vavr:0.10.4')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.15.0')
 
     compileOnly('org.projectlombok:lombok:1.18.30')
     annotationProcessor('org.projectlombok:lombok:1.18.30')
