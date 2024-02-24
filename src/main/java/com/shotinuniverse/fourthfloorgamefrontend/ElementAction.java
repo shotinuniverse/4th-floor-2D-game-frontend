@@ -5,8 +5,11 @@ import com.shotinuniverse.fourthfloorgamefrontend.menu.Settings;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.Map;
@@ -55,5 +58,21 @@ public class ElementAction {
         };
 
         currentButton.setOnMousePressed(leftClickHandler);
+    }
+
+    public void addActionButtonEntered(Button currentButton) {
+        ColorAdjust setBrightness = new ColorAdjust();
+        setBrightness.setBrightness(-0.7);
+
+        currentButton.setOnMouseEntered(e -> {
+            currentButton.setEffect(setBrightness);
+        });
+    }
+
+    public void addActionButtonExited(Button currentButton) {
+        ColorAdjust setBrightness = new ColorAdjust();
+        setBrightness.setBrightness(0);
+
+        currentButton.setOnMouseExited(e -> currentButton.setEffect(setBrightness));
     }
 }

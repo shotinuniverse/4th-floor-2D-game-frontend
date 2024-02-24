@@ -5,6 +5,9 @@ import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -15,7 +18,7 @@ import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
 
 public class Main extends Application {
 
-    private Group root;
+    private Pane root;
     private Scene scene;
     private String menuType = "main";
 
@@ -24,17 +27,17 @@ public class Main extends Application {
         setResolution();
         setCurrentProject();
 
-        this.root = new Group();
+        this.root = new Pane();
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
         if (structureMenu != null) {
-            paintMenu(stage, root, structureMenu);
+            paintMenu(stage, this.root, structureMenu);
         }
 
-        this.scene = new Scene(root,
+        this.scene = new Scene(this.root,
                 SessionParameters.resolutionWidth, SessionParameters.resolutionHeight);
 
-        stage.setTitle("Hello!");
+        //stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
