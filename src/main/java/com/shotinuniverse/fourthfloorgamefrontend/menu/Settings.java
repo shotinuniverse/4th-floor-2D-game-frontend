@@ -4,6 +4,7 @@ import com.shotinuniverse.fourthfloorgamefrontend.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.Map;
@@ -12,13 +13,13 @@ import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
 
 public class Settings extends Application {
 
-    private Group root;
+    private Pane root;
     private Scene scene;
     private String menuType = "settings";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.root = new Group();
+        this.root = new Pane();
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
         if (structureMenu != null) {
