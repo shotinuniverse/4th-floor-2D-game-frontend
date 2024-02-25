@@ -1,4 +1,4 @@
-package com.shotinuniverse.fourthfloorgamefrontend;
+package com.shotinuniverse.fourthfloorgamefrontend.common;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,8 +14,8 @@ public class HttpConnector {
 
     public HttpConnector(Boolean protectedConnection, String resource) throws IOException {
         super();
-        this.connectionString = (protectedConnection) ? "https://" : "http://" + SessionParameters.serverName
-                + ":" + String.valueOf(SessionParameters.serverPort);
+        this.connectionString = (protectedConnection) ? "https://" : "http://" + SessionManager.serverName
+                + ":" + String.valueOf(SessionManager.serverPort);
         this.connectionString = this.connectionString + resource;
 
         this.httpConnection = getConnection();
@@ -23,8 +23,8 @@ public class HttpConnector {
 
     public HttpConnector(Boolean protectedConnection, String resource, Map<String, String> params) throws IOException {
         super();
-        this.connectionString = (protectedConnection) ? "https://" : "http://" + SessionParameters.serverName
-                + ":" + String.valueOf(SessionParameters.serverPort);
+        this.connectionString = (protectedConnection) ? "https://" : "http://" + SessionManager.serverName
+                + ":" + String.valueOf(SessionManager.serverPort);
         this.connectionString = this.connectionString + resource + getQuery(params);
 
         this.httpConnection = getConnection();

@@ -1,4 +1,4 @@
-package com.shotinuniverse.fourthfloorgamefrontend;
+package com.shotinuniverse.fourthfloorgamefrontend.repositories;
 
 public class Points {
 

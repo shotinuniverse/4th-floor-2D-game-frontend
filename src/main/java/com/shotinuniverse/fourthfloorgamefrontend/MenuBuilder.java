@@ -1,7 +1,8 @@
 package com.shotinuniverse.fourthfloorgamefrontend;
 
-import javafx.scene.Group;
-import javafx.scene.Scene;
+import com.shotinuniverse.fourthfloorgamefrontend.common.HttpConnector;
+import com.shotinuniverse.fourthfloorgamefrontend.common.SQLQuery;
+import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,37 +10,26 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
+import java.sql.SQLException;
 import java.util.*;
 
 public final class MenuBuilder {
 
-    public static Map<String, Object> getStructureMenu(String type) throws IOException {
-        String resourceName = "/menu";
-        String resolution = String.format("%dx%d",
-                SessionParameters.resolutionWidth, SessionParameters.resolutionHeight);
-
-        Map<String, String> httpParams = new HashMap<String, String>() {{
-            put("resolution", resolution);
-            put("type", type);
-        }};
-
-        HttpConnector httpConnector = new HttpConnector(false, resourceName, httpParams);
-
-        return httpConnector.getObject();
+    public static Map<String, Object> getStructureMenu(String type) throws SQLException {
+        return SQLQuery.getMenuByResolutionAndType(type);
     }
 
-    public static void paintMenu(Stage stage, Pane root, Map<String, Object> structureMenu){
+    public static void paintMenu(Stage stage, Pane root, Map<String, Object> structureMenu) throws SQLException {
         addImageViewTitle(root);
         setStageProperties(stage, structureMenu);
         setGroupProperties(root, structureMenu);
 
-        addButtonsIfNeed(stage, root, structureMenu);
+        addButtonsIfNeed(stage, root, (int) structureMenu.get("_id"));
     }
 
     private static void addImageViewTitle(Pane root) {
-        String pathToImage = SessionParameters.pathImages.substring(1) + "menu-label-1920-1080.png";
-        String imagePath = SessionParameters.classLoader.getResource(pathToImage).toExternalForm();
+        String pathToImage = SessionManager.pathImages.substring(1) + "menu-label-1920-1080.png";
+        String imagePath = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
         Image image = new Image(imagePath, 863, 136, false, false);
         ImageView imageView = new ImageView(image);
         imageView.setX(150);
@@ -56,20 +46,16 @@ public final class MenuBuilder {
 
     private static void setGroupProperties(Pane root, Map<String, Object> structureMenu) {
         if (structureMenu.containsKey("image")) {
-            String pathToImage = SessionParameters.pathImages.substring(1) + structureMenu.get("image");
-            String image = SessionParameters.classLoader.getResource(pathToImage).toExternalForm();
+            String pathToImage = SessionManager.pathImages.substring(1) + structureMenu.get("image");
+            String image = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
             root.setStyle("-fx-background-image: url('" + image + "'); " +
                     "-fx-background-position: center center; " +
                     "-fx-background-repeat: stretch;");
         }
     }
 
-    private static void addButtonsIfNeed(Stage stage, Pane root, Map<String, Object> structureMenu) {
-        if (!structureMenu.containsKey("buttons")) {
-            return;
-        }
-
-        ArrayList<Object> buttons = (ArrayList<Object>) structureMenu.get("buttons");
+    private static void addButtonsIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
+        ArrayList<Object> buttons = SQLQuery.getButtonsByOwner(idMenu);
         for (Object buttonItem: buttons) {
             addButton(stage, root, buttonItem);
         }
@@ -77,10 +63,10 @@ public final class MenuBuilder {
 
     private static void addButton(Stage stage, Pane root, Object buttonItem) {
         Button button = new Button();
-        LinkedHashMap objectButtonItem = ((LinkedHashMap) buttonItem);
+        HashMap objectButtonItem = ((HashMap) buttonItem);
         button.setText(String.valueOf(objectButtonItem.get("text")));
 
-        String pathToImage = SessionParameters.pathLocalResources + objectButtonItem.get("image");
+        String pathToImage = SessionManager.pathImages + objectButtonItem.get("image");
         String style = objectButtonItem.get("style") + "-fx-background-image: url('" + pathToImage + "')";
 
         button.setStyle(style);
