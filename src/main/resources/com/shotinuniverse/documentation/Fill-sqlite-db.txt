@@ -1,0 +1,61 @@
+INSERT INTO menu_types (name)
+VALUES('main');
+INSERT INTO menu_types (name)
+VALUES('characters');
+INSERT INTO menu_types (name)
+VALUES('settings');
+INSERT INTO menu_types (name)
+VALUES('screen');
+INSERT INTO menu_types (name)
+VALUES('keys');
+
+insert into menu (name, type, resolution, image)
+values ('main (1920x1080)', 1, '1920x1080', 'menu-background-1920-1080.png');
+insert into menu (name, type, resolution, image)
+values ('characters (1920x1080)', 2, '1920x1080', 'menu-background-1920-1080.png');
+insert into menu (name, type, resolution, image)
+values ('settings (1920x1080)', 3, '1920x1080', 'menu-background-1920-1080.png');
+insert into menu (name, type, resolution, image)
+values ('keys (1920x1080)', 5, '1920x1080', 'menu-background-1920-1080.png');
+
+insert into points (pointX, pointY, width, weight) VALUES (1500, 425, 300, 70);
+insert into points (pointX, pointY, width, weight) VALUES (1500, 520, 300, 70);
+insert into points (pointX, pointY, width, weight) VALUES (1500, 770, 300, 70);
+
+insert into synonyms (object_id, class, language_code, synonim)
+values(1, 'com.shotinuniverse.fourthfloorgame.button', 'ru', 'Выберите персонажа');
+insert into synonyms (object_id, class, language_code, synonim)
+values(1, 'com.shotinuniverse.fourthfloorgame.button', 'en', 'Select character');
+insert into synonyms (object_id, class, language_code, synonim)
+values(2, 'com.shotinuniverse.fourthfloorgame.button', 'ru', 'Настройки');
+insert into synonyms (object_id, class, language_code, synonim)
+values(2, 'com.shotinuniverse.fourthfloorgame.button', 'en', 'Settings');
+insert into synonyms (object_id, class, language_code, synonim)
+values(3, 'com.shotinuniverse.fourthfloorgame.button', 'ru', 'Выйти');
+insert into synonyms (object_id, class, language_code, synonim)
+values(3, 'com.shotinuniverse.fourthfloorgame.button', 'en', 'Exit');
+insert into synonyms (object_id, class, language_code, synonim)
+values(4, 'com.shotinuniverse.fourthfloorgame.button', 'ru', 'Экран');
+insert into synonyms (object_id, class, language_code, synonim)
+values(4, 'com.shotinuniverse.fourthfloorgame.button', 'en', 'Screen');
+insert into synonyms (object_id, class, language_code, synonim)
+values(5, 'com.shotinuniverse.fourthfloorgame.button', 'ru', 'Клавиши');
+insert into synonyms (object_id, class, language_code, synonim)
+values(5, 'com.shotinuniverse.fourthfloorgame.button', 'en', 'Keys');
+insert into synonyms (object_id, class, language_code, synonim)
+values(6, 'com.shotinuniverse.fourthfloorgame.button', 'ru', 'Назад');
+insert into synonyms (object_id, class, language_code, synonim)
+values(6, 'com.shotinuniverse.fourthfloorgame.button', 'en', 'Back');
+
+insert into buttons (_owner, "order", points, synonim, resource, action, image, style)
+values (1, 1, 1, 1, '/characters', '', 'menu-button-1920-1080.png', '-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-family: \"Courier New\"; -fx-font-weight: Bold;');
+insert into buttons (_owner, "order", points, synonim, resource, action, image, style)
+values (1, 2, 2, 2, '/settings', '', 'menu-button-1920-1080.png', '-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-family: \"Courier New\"; -fx-font-weight: Bold;');
+insert into buttons (_owner, "order", points, synonim, resource, action, image, style)
+values (1, 3, 3, 3, '', 'exit', 'menu-button-1920-1080.png', '-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-family: \"Courier New\"; -fx-font-weight: Bold;');
+insert into buttons (_owner, "order", points, synonim, resource, action, image, style)
+values (1, 1, 1, 4, '/characters', '', 'menu-button-1920-1080.png', '-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-family: \"Courier New\"; -fx-font-weight: Bold;');
+insert into buttons (_owner, "order", points, synonim, resource, action, image, style)
+values (1, 2, 2, 5, '/characters', '', 'menu-button-1920-1080.png', '-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-family: \"Courier New\"; -fx-font-weight: Bold;');
+insert into buttons (_owner, "order", points, synonim, resource, action, image, style)
+values (1, 3, 3, 6, '/characters', '', 'menu-button-1920-1080.png', '-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-family: \"Courier New\"; -fx-font-weight: Bold;');

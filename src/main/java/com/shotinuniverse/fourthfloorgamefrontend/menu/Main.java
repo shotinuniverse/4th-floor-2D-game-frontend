@@ -1,17 +1,13 @@
 package com.shotinuniverse.fourthfloorgamefrontend.menu;
 
-import com.shotinuniverse.fourthfloorgamefrontend.*;
+import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
@@ -23,9 +19,9 @@ public class Main extends Application {
     private String menuType = "main";
 
     @Override
-    public void start(Stage stage) throws IOException {
-        setResolution();
-        setCurrentProject();
+    public void start(Stage stage) throws IOException, SQLException, ClassNotFoundException {
+        SessionManager sessionManager = new SessionManager();
+        sessionManager.setSessionParameters();
 
         this.root = new Pane();
 
@@ -35,9 +31,8 @@ public class Main extends Application {
         }
 
         this.scene = new Scene(this.root,
-                SessionParameters.resolutionWidth, SessionParameters.resolutionHeight);
+                SessionManager.resolutionWidth, SessionManager.resolutionHeight);
 
-        //stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
@@ -45,25 +40,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
-    }
-
-    public void setResolution() {
-        if (SessionParameters.resolutionHeight != 0) {
-            return;
-        }
-
-        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-
-        SessionParameters.resolutionWidth = (int) screenBounds.getWidth();
-        SessionParameters.resolutionHeight = (int) screenBounds.getHeight();
-    }
-
-    public void setCurrentProject() {
-        if (SessionParameters.classLoader != null) {
-            return;
-        }
-
-        SessionParameters.classLoader = getClass().getClassLoader();
     }
 
 }

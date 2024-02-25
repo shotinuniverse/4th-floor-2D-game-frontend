@@ -34,7 +34,7 @@ public class ElementAction {
                         System.exit(0);
                     }
                 } else {
-                    if (resource.equals("/main")) {
+                    if (resource.equals("main")) {
                         Main main = new Main();
                         try {
                             main.start((Stage) additionalInfo.get("stage"));
@@ -43,7 +43,7 @@ public class ElementAction {
                         } {
 
                         }
-                    } else if (resource.equals("/settings")) {
+                    } else if (resource.equals("settings")) {
                         Settings settings = new Settings();
                         try {
                             settings.start((Stage) additionalInfo.get("stage"));

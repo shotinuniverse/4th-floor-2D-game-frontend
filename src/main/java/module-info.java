@@ -7,9 +7,14 @@ module com.shotinuniverse.fourthfloorgamefrontend {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
+    requires java.sql;
 
     opens com.shotinuniverse.fourthfloorgamefrontend to javafx.fxml;
     exports com.shotinuniverse.fourthfloorgamefrontend;
     exports com.shotinuniverse.fourthfloorgamefrontend.menu;
     opens com.shotinuniverse.fourthfloorgamefrontend.menu to javafx.fxml;
+    exports com.shotinuniverse.fourthfloorgamefrontend.common;
+    opens com.shotinuniverse.fourthfloorgamefrontend.common to javafx.fxml;
+    exports com.shotinuniverse.fourthfloorgamefrontend.repositories;
+    opens com.shotinuniverse.fourthfloorgamefrontend.repositories to javafx.fxml;
 }
