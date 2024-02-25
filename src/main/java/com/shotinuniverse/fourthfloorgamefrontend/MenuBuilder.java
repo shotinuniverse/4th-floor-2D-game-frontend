@@ -38,7 +38,7 @@ public final class MenuBuilder {
     }
 
     private static void addImageViewTitle(Pane root) {
-        String pathToImage = SessionParameters.pathLocalResources.substring(1) + "menu-label-1920-1080.png";
+        String pathToImage = SessionParameters.pathImages.substring(1) + "menu-label-1920-1080.png";
         String imagePath = SessionParameters.classLoader.getResource(pathToImage).toExternalForm();
         Image image = new Image(imagePath, 863, 136, false, false);
         ImageView imageView = new ImageView(image);
@@ -56,7 +56,7 @@ public final class MenuBuilder {
 
     private static void setGroupProperties(Pane root, Map<String, Object> structureMenu) {
         if (structureMenu.containsKey("image")) {
-            String pathToImage = SessionParameters.pathLocalResources.substring(1) + structureMenu.get("image");
+            String pathToImage = SessionParameters.pathImages.substring(1) + structureMenu.get("image");
             String image = SessionParameters.classLoader.getResource(pathToImage).toExternalForm();
             root.setStyle("-fx-background-image: url('" + image + "'); " +
                     "-fx-background-position: center center; " +

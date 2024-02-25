@@ -43,6 +43,7 @@ dependencies {
     implementation('org.glassfish.jaxb:jaxb-runtime:4.0.4')
     implementation('io.vavr:vavr:0.10.4')
     implementation('com.fasterxml.jackson.core:jackson-databind:2.15.0')
+    compile group:'org.xerial', name:'sqlite-jdbc', version:'3.45.1.0'
 
     compileOnly('org.projectlombok:lombok:1.18.30')
     annotationProcessor('org.projectlombok:lombok:1.18.30')
