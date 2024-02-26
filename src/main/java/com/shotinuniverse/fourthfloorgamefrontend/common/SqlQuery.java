@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.shotinuniverse.fourthfloorgamefrontend.common.SQLConnector.*;
+import static com.shotinuniverse.fourthfloorgamefrontend.common.SqlConnector.*;
 
-public class SQLQuery {
+public class SqlQuery {
 
     public static Map<String, Object> getObjectFromTable(String query) throws SQLException {
         resultSet = statement.executeQuery(query);
@@ -43,41 +43,6 @@ public class SQLQuery {
         }
 
         return values;
-    }
-
-    public static Map<String, Object> getMenuByResolutionAndType(String type) throws SQLException  {
-        String query = String.format("""
-                select
-                    menu.*
-                from
-                    menu as menu
-                left outer join menu_types as menu_types
-                    on menu.type = menu_types._id
-                where
-                    menu.resolution = '%dx%d' and menu_types.name = '%s'
-                """, SessionManager.resolutionWidth, SessionManager.resolutionHeight, type);
-        return getObjectFromTable(query);
-    }
-
-    public static ArrayList<Object> getButtonsByOwner(int ownerId) throws SQLException  {
-        String query = String.format("""
-                select
-                    buttons.*, synonyms.synonim as text,
-                    points.pointX as pointX, points.pointY as pointY,
-                    points.width as width, points.height as height
-                from
-                    buttons as buttons
-                    left outer join synonyms as synonyms
-                        on buttons._id = synonyms.object_id
-                        and buttons._class = synonyms.class
-                        and synonyms.language_code = '%s'
-                    left outer join points as points
-                        on buttons.points = points._id
-                where
-                    _owner = %d
-                """, SessionManager.language, ownerId);
-
-        return getObjects(query);
     }
 
 }

@@ -13,12 +13,12 @@ public final class SessionManager {
     public static int serverPort = 8080;
     public static ClassLoader classLoader;
     public static String pathLocalResources = "/com/shotinuniverse/";
-    public static String pathImages= "/com/shotinuniverse/images/";
+    public static String pathImages= pathLocalResources + "images/";
     public static String dbPath = "src/main/resources/com/shotinuniverse/db.db";
     public static String language = "ru";
 
     public void setSessionParameters() throws ClassNotFoundException, SQLException {
-        SQLConnector.openConnection();
+        SqlConnector.openConnection();
 
         setResolution();
         setCurrentProject();

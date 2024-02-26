@@ -1,5 +1,6 @@
 package com.shotinuniverse.fourthfloorgamefrontend;
 
+import com.shotinuniverse.fourthfloorgamefrontend.menu.Keys;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Main;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Settings;
 import javafx.application.Platform;
@@ -47,6 +48,15 @@ public class ElementAction {
                         Settings settings = new Settings();
                         try {
                             settings.start((Stage) additionalInfo.get("stage"));
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        } {
+
+                        }
+                    } else if (resource.equals("keys")) {
+                        Keys keys = new Keys();
+                        try {
+                            keys.start((Stage) additionalInfo.get("stage"));
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         } {

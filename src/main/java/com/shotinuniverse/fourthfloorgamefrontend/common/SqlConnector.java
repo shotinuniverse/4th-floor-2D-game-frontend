@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SQLConnector {
+public class SqlConnector {
 
     public static Connection connection;
     public static Statement statement;

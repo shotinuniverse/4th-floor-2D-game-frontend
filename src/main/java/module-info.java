@@ -15,6 +15,4 @@ module com.shotinuniverse.fourthfloorgamefrontend {
     opens com.shotinuniverse.fourthfloorgamefrontend.menu to javafx.fxml;
     exports com.shotinuniverse.fourthfloorgamefrontend.common;
     opens com.shotinuniverse.fourthfloorgamefrontend.common to javafx.fxml;
-    exports com.shotinuniverse.fourthfloorgamefrontend.repositories;
-    opens com.shotinuniverse.fourthfloorgamefrontend.repositories to javafx.fxml;
 }
