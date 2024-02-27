@@ -3,6 +3,7 @@ package com.shotinuniverse.fourthfloorgamefrontend;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Keys;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Main;
+import com.shotinuniverse.fourthfloorgamefrontend.menu.Screen;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Settings;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -76,6 +77,17 @@ public class ElementAction {
                             Keys keys = new Keys();
                             try {
                                 keys.start((Stage) additionalInfo.get("stage"));
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            {
+
+                            }
+                        }
+                        case "screen" -> {
+                            Screen screen = new Screen();
+                            try {
+                                screen.start((Stage) additionalInfo.get("stage"));
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
