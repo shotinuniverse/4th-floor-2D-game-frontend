@@ -16,7 +16,7 @@ public class SqlConnector {
     {
         connection = null;
         Class.forName("org.sqlite.JDBC");
-        connection = DriverManager.getConnection("jdbc:sqlite:" + SessionManager.dbPath);
+        connection = DriverManager.getConnection("jdbc:sqlite:" + SessionManager.pathToDatabase);
 
         statement = connection.createStatement();
     }

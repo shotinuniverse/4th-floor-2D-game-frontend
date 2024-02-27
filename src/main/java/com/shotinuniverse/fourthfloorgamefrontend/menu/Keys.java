@@ -26,12 +26,7 @@ public class Keys extends Application {
             paintMenu(primaryStage, root, structureMenu);
         }
 
-        this.scene = new Scene(root,
-                SessionManager.resolutionWidth, SessionManager.resolutionHeight);
-
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
+        SessionManager.scene.setRoot(this.root);
     }
 
 }

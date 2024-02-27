@@ -45,4 +45,10 @@ public class SqlQuery {
         return values;
     }
 
+    public static ArrayList<Object> getSystemParams() throws SQLException {
+        String query = "select * from system_params";
+
+        return getObjects(query);
+    }
+
 }

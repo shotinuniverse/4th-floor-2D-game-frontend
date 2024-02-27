@@ -13,7 +13,6 @@ import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
 public class Settings extends Application {
 
     private Pane root;
-    private Scene scene;
     private String menuType = "settings";
 
     @Override
@@ -22,15 +21,10 @@ public class Settings extends Application {
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
         if (structureMenu != null) {
-            paintMenu(primaryStage, root, structureMenu);
+            paintMenu(primaryStage, this.root, structureMenu);
         }
 
-        this.scene = new Scene(root,
-                SessionManager.resolutionWidth, SessionManager.resolutionHeight);
-
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
+        SessionManager.scene.setRoot(this.root);
     }
 
 }

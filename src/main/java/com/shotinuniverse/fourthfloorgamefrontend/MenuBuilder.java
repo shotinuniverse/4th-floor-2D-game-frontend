@@ -33,7 +33,7 @@ public final class MenuBuilder {
     }
 
     private static void addImageViewTitle(Pane root) {
-        String pathToImage = SessionManager.pathImages.substring(1) + "menu-label-1920-1080.png";
+        String pathToImage = SessionManager.pathToImages.substring(1) + "menu-label-1920-1080.png";
         String imagePath = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
         Image image = new Image(imagePath, 863, 136, false, false);
         ImageView imageView = new ImageView(image);
@@ -51,7 +51,7 @@ public final class MenuBuilder {
 
     private static void setGroupProperties(Pane root, Map<String, Object> structureMenu) {
         if (structureMenu.containsKey("image")) {
-            String pathToImage = SessionManager.pathImages.substring(1) + structureMenu.get("image");
+            String pathToImage = SessionManager.pathToImages.substring(1) + structureMenu.get("image");
             String image = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
             root.setStyle("-fx-background-image: url('" + image + "'); " +
                     "-fx-background-position: center center; " +
@@ -73,7 +73,7 @@ public final class MenuBuilder {
         HashMap objectButtonItem = ((HashMap) buttonItem);
         button.setText(String.valueOf(objectButtonItem.get("text")));
 
-        String pathToImage = SessionManager.pathImages + objectButtonItem.get("image");
+        String pathToImage = SessionManager.pathToImages + objectButtonItem.get("image");
         String style = objectButtonItem.get("style") + "-fx-background-image: url('" + pathToImage + "')";
 
         button.setStyle(style);
