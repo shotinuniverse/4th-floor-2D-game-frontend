@@ -45,6 +45,10 @@ public class SqlQuery {
         return values;
     }
 
+    public static void updateObject(String query) throws SQLException {
+        statement.executeUpdate(query);
+    }
+
     public static ArrayList<Object> getSystemParams() throws SQLException {
         String query = "select * from system_params";
 

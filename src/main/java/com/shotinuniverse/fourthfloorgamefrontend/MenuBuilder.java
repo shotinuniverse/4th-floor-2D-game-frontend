@@ -15,6 +15,8 @@ import java.util.*;
 
 public final class MenuBuilder {
 
+    private static ArrayList<Object> formData;
+
     public static Map<String, Object> getStructureMenu(String type) throws SQLException {
         String query = getQueryForMenu(type);
 
@@ -27,9 +29,9 @@ public final class MenuBuilder {
         setGroupProperties(root, structureMenu);
 
         int owner = (int) structureMenu.get("_id");
-        addButtonsIfNeed(stage, root, owner);
         addLabelsIfNeed(stage, root, owner);
         addTextFieldsIfNeed(stage, root, owner);
+        addButtonsIfNeed(stage, root, owner);
     }
 
     private static void addImageViewTitle(Pane root) {
@@ -107,6 +109,7 @@ public final class MenuBuilder {
         Map<String, Object> additionalInfo = new HashMap();
         additionalInfo.put("stage", stage);
         additionalInfo.put("group", root);
+        additionalInfo.put("data", formData);
 
         String resource = (String) objectButtonItem.get("resource");
         String action = (String) objectButtonItem.get("action");
@@ -166,8 +169,8 @@ public final class MenuBuilder {
     private static void addTextFieldsIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
         String query = getQueryForTextFields(idMenu);
 
-        ArrayList<Object> textFields = SqlQuery.getObjects(query);
-        for (Object textFieldItem: textFields) {
+        formData = SqlQuery.getObjects(query);
+        for (Object textFieldItem: formData) {
             addTextField(stage, root, textFieldItem);
         }
     }
@@ -180,6 +183,8 @@ public final class MenuBuilder {
         String style = (String) objectButtonItem.get("style");
 
         textField.setStyle(style);
+        textField.setFocusTraversable(false);
+        textField.setId(String.valueOf(objectButtonItem.get("_id")));
 
         if (objectButtonItem.containsKey("pointX")){
             int pointX = (int) objectButtonItem.get("pointX");
@@ -208,6 +213,7 @@ public final class MenuBuilder {
         root.getChildren().add(textField);
     }
 
+    //region sql query texts
     public static String getQueryForMenu(String type) {
         return String.format("""
                 select
@@ -291,4 +297,5 @@ public final class MenuBuilder {
                    text_fields."order" asc
                 """, ownerId);
     }
+    //endregion
 }
