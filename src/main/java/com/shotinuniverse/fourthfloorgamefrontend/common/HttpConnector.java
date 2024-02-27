@@ -61,15 +61,16 @@ public class HttpConnector {
         result.append("?");
         boolean first = true;
 
+        String codding = "UTF-8";
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (first)
                 first = false;
             else
                 result.append("&");
 
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append(URLEncoder.encode(entry.getKey(), codding));
             result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append(URLEncoder.encode(entry.getValue(), codding));
         }
 
         return result.toString();

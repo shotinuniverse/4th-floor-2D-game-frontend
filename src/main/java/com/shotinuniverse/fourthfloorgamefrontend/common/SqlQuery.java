@@ -33,9 +33,9 @@ public class SqlQuery {
         while(resultSet.next()) {
             Map<String, Object> map = new HashMap();
             for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
-                switch (resultSet.getMetaData().getColumnTypeName(i)){
-                    case "INTEGER": map.put(resultSet.getMetaData().getColumnName(i), resultSet.getInt(i)); break;
-                    case "TEXT": map.put(resultSet.getMetaData().getColumnName(i), resultSet.getString(i)); break;
+                switch (resultSet.getMetaData().getColumnTypeName(i)) {
+                    case "INTEGER" -> map.put(resultSet.getMetaData().getColumnName(i), resultSet.getInt(i));
+                    case "TEXT" -> map.put(resultSet.getMetaData().getColumnName(i), resultSet.getString(i));
                 }
             }
 
@@ -43,6 +43,10 @@ public class SqlQuery {
         }
 
         return values;
+    }
+
+    public static void updateObject(String query) throws SQLException {
+        statement.executeUpdate(query);
     }
 
     public static ArrayList<Object> getSystemParams() throws SQLException {
