@@ -74,6 +74,7 @@ public final class SessionManager {
     public void setScene(Pane root) {
         scene = new Scene(root,
                 SessionManager.resolutionWidth, SessionManager.resolutionHeight);
+        scene.getStylesheets().add(pathToLocalResources + "style.css");
     }
 
     public static String getRelativePathToImage() {
