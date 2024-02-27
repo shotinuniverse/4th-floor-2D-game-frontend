@@ -13,20 +13,15 @@ import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.paintMenu;
 
 public class Keys extends Application {
 
-    private Pane root;
-    private Scene scene;
-    private String menuType = "keys";
-
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.root = new Pane();
+        Pane root = new Pane();
+        String menuType = "keys";
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
-        if (structureMenu != null) {
-            paintMenu(primaryStage, root, structureMenu);
-        }
+        paintMenu(primaryStage, root, structureMenu);
 
-        SessionManager.scene.setRoot(this.root);
+        SessionManager.scene.setRoot(root);
     }
 
 }

@@ -13,28 +13,24 @@ import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
 
 public class Main extends Application {
 
-    private Pane root;
-    private String menuType = "main";
-
     @Override
     public void start(Stage stage) throws SQLException, ClassNotFoundException {
         SessionManager sessionManager = new SessionManager();
         sessionManager.setSessionParameters();
 
-        this.root = new Pane();
+        String menuType = "main";
+        Pane root = new Pane();
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
-        if (structureMenu != null) {
-            paintMenu(stage, this.root, structureMenu);
-        }
+        paintMenu(stage, root, structureMenu);
 
         if (SessionManager.scene == null) {
-            sessionManager.setScene(this.root);
+            sessionManager.setScene(root);
             stage.setScene(sessionManager.scene);
             stage.setFullScreen(true);
             stage.show();
         } else {
-            SessionManager.scene.setRoot(this.root);
+            SessionManager.scene.setRoot(root);
         }
     }
 
