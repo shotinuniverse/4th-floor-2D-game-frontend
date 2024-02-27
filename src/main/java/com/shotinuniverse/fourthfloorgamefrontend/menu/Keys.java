@@ -2,7 +2,6 @@ package com.shotinuniverse.fourthfloorgamefrontend.menu;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 

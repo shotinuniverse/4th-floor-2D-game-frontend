@@ -8,6 +8,7 @@ module com.shotinuniverse.fourthfloorgamefrontend {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires java.sql;
+    requires org.xerial.sqlitejdbc;
 
     opens com.shotinuniverse.fourthfloorgamefrontend to javafx.fxml;
     exports com.shotinuniverse.fourthfloorgamefrontend;

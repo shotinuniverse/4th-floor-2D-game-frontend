@@ -33,8 +33,9 @@ public final class MenuBuilder {
     }
 
     private static void addImageViewTitle(Pane root) {
-        String pathToImage = SessionManager.pathToImages.substring(1) + "menu-label-1920-1080.png";
-        String imagePath = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
+        String pathToImage = SessionManager.getRelativePathToImage() + "menu-label-1920-1080.png";
+        String imagePath = SessionManager.getPathToResource(pathToImage);
+
         Image image = new Image(imagePath, 863, 136, false, false);
         ImageView imageView = new ImageView(image);
         imageView.setX(150);
@@ -51,8 +52,8 @@ public final class MenuBuilder {
 
     private static void setGroupProperties(Pane root, Map<String, Object> structureMenu) {
         if (structureMenu.containsKey("image")) {
-            String pathToImage = SessionManager.pathToImages.substring(1) + structureMenu.get("image");
-            String image = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
+            String pathToImage = SessionManager.getRelativePathToImage() + structureMenu.get("image");
+            String image = SessionManager.getPathToResource(pathToImage);
             root.setStyle("-fx-background-image: url('" + image + "'); " +
                     "-fx-background-position: center center; " +
                     "-fx-background-repeat: stretch;");
@@ -70,7 +71,7 @@ public final class MenuBuilder {
 
     private static void addButton(Stage stage, Pane root, Object buttonItem) {
         Button button = new Button();
-        HashMap objectButtonItem = ((HashMap) buttonItem);
+        HashMap<String, Object> objectButtonItem = ((HashMap) buttonItem);
         button.setText(String.valueOf(objectButtonItem.get("text")));
 
         String pathToImage = SessionManager.pathToImages + objectButtonItem.get("image");
@@ -102,7 +103,7 @@ public final class MenuBuilder {
 
         button.setPrefSize(width, height);
 
-        ElementAction buttonAction = new ElementAction(stage);
+        ElementAction buttonAction = new ElementAction();
         Map<String, Object> additionalInfo = new HashMap();
         additionalInfo.put("stage", stage);
         additionalInfo.put("group", root);
@@ -128,7 +129,7 @@ public final class MenuBuilder {
 
     private static void addLabel(Stage stage, Pane root, Object labelItem) {
         Label label = new Label();
-        HashMap objectButtonItem = ((HashMap) labelItem);
+        HashMap<String, Object> objectButtonItem = ((HashMap) labelItem);
         label.setText(String.valueOf(objectButtonItem.get("text")));
 
         String style = (String) objectButtonItem.get("style");
@@ -173,7 +174,7 @@ public final class MenuBuilder {
 
     private static void addTextField(Stage stage, Pane root, Object textFieldItem) {
         TextField textField = new TextField();
-        HashMap objectButtonItem = ((HashMap) textFieldItem);
+        HashMap<String, Object> objectButtonItem = ((HashMap) textFieldItem);
         textField.setPromptText(String.valueOf(objectButtonItem.get("text")));
 
         String style = (String) objectButtonItem.get("style");
@@ -223,7 +224,7 @@ public final class MenuBuilder {
     public static String getQueryForButtons(int ownerId) {
         return String.format("""
                 select
-                    buttons.*, synonyms.synonim as text,
+                    buttons.*, synonyms.synonym as text,
                     points.pointX as pointX, points.pointY as pointY,
                     points.width as width, points.height as height
                 from
@@ -244,7 +245,7 @@ public final class MenuBuilder {
     public static String getQueryForLabels(int ownerId) {
         return String.format("""
                 select
-                    labels.*, synonyms.synonim as text,
+                    labels.*, synonyms.synonym as text,
                     points.pointX as pointX, points.pointY as pointY,
                     points.width as width, points.height as height
                 from
