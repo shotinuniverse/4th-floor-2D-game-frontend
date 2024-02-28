@@ -4,10 +4,7 @@ import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -19,7 +16,7 @@ import java.util.*;
 public final class MenuBuilder {
 
     private static String rootName;
-    private static ArrayList<Object> formData;
+    private static ArrayList<Object> formData = new ArrayList<Object>();
 
     public static Map<String, Object> getStructureMenu(String type) throws SQLException {
         rootName = type;
@@ -39,6 +36,7 @@ public final class MenuBuilder {
         addLabelsIfNeed(stage, root, owner);
         addTextFieldsIfNeed(stage, root, owner);
         addComboBoxesIfNeed(stage, root, owner);
+        addSlidersIfNeed(stage, root, owner);
         addButtonsIfNeed(stage, root, owner);
     }
 
@@ -101,6 +99,7 @@ public final class MenuBuilder {
         additionalInfo.put("stage", stage);
         additionalInfo.put("group", root);
         additionalInfo.put("data", formData);
+        additionalInfo.put("rootName", rootName);
 
         String resource = (String) objectButtonItem.get("resource");
         String action = (String) objectButtonItem.get("action");
@@ -140,9 +139,11 @@ public final class MenuBuilder {
             query = getQueryForTextFieldsKeys(idMenu);
         } else return;
 
-        formData = SqlQuery.getObjects(query);
-        for (Object textFieldItem: formData) {
+        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
+        for (Object textFieldItem: arrayList) {
             addTextField(stage, root, textFieldItem);
+
+            formData.add(textFieldItem);
         }
     }
 
@@ -176,6 +177,8 @@ public final class MenuBuilder {
         ArrayList<Object> arrayList = SqlQuery.getObjects(query);
         for (Object textFieldItem: arrayList) {
             addComboBox(stage, root, textFieldItem);
+
+            formData.add(textFieldItem);
         }
     }
 
@@ -227,6 +230,55 @@ public final class MenuBuilder {
         root.getChildren().add(comboBox);
     }
 
+    private static void addSlidersIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
+        String query = "";
+        if (rootName == "screen") {
+            query = getQueryForSliders(idMenu);
+        } else return;
+
+        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
+        for (Object sliderItem: arrayList) {
+            addSlider(stage, root, sliderItem);
+
+            formData.add(sliderItem);
+        }
+    }
+
+    private static void addSlider(Stage stage, Pane root, Object sliderItem) throws SQLException {
+        Slider slider = new Slider();
+        HashMap<String, Object> objectSliderItem = ((HashMap) sliderItem);
+
+        String style = (String) objectSliderItem.get("style");
+        slider.setStyle(style);
+        slider.setFocusTraversable(false);
+        slider.setId(String.valueOf(objectSliderItem.get("_id")));
+
+        setPoints(slider, objectSliderItem);
+
+        String query = String.format("""
+            select
+                tb.%s as value
+            from
+                %s as tb
+            where
+                _id = %d    
+            """, objectSliderItem.get("column_data"),
+                objectSliderItem.get("table_data"), (int) objectSliderItem.get("static_id"));
+
+        Map<String, Object> map = SqlQuery.getObjectFromTable(query);
+        if (map.containsKey("value")) {
+            slider.setValue(Integer.parseInt((String) map.get("value")));
+        }
+
+        slider.setMin(0);
+        slider.setMax(100);
+
+        slider.setMajorTickUnit(50);
+        slider.setMinorTickCount(2);
+
+        root.getChildren().add(slider);
+    }
+
     private static void setPoints(Object elementObject, HashMap<String, Object> mapItem) {
         double pointX = getValuePoint(mapItem, "pointX");
         double pointY = getValuePoint(mapItem, "pointY");
@@ -261,6 +313,13 @@ public final class MenuBuilder {
             comboBox.setPrefHeight(height);
             comboBox.setMaxWidth(width);
             comboBox.setPrefWidth(width);
+        } else if(elementObject instanceof Slider slider) {
+            slider.setTranslateX(pointX);
+            slider.setTranslateY(pointY);
+            slider.setMaxHeight(height);
+            slider.setPrefHeight(height);
+            slider.setMaxWidth(width);
+            slider.setPrefWidth(width);
         }
     }
 
@@ -372,6 +431,23 @@ public final class MenuBuilder {
                        combo_boxes._owner = '%d'
                order by
                    combo_boxes."order" asc
+                """, ownerId);
+    }
+
+    public static String getQueryForSliders(int ownerId) {
+        return String.format("""
+                select
+                   sliders.*,
+                   points.pointX as pointX, points.pointY as pointY,
+                   points.width as width, points.height as height
+               from
+                   sliders as sliders
+                       left outer join points as points
+                       on sliders.points = points._id
+               where
+                       sliders._owner = '%d'
+               order by
+                   sliders."order" asc
                 """, ownerId);
     }
 
