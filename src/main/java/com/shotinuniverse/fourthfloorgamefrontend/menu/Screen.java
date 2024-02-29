@@ -15,7 +15,7 @@ public class Screen extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
-        String menuType = "screen";
+        String menuType = "Screen";
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
         paintMenu(primaryStage, root, structureMenu);

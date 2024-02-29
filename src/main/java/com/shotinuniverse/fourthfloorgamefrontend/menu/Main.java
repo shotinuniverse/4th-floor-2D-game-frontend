@@ -17,7 +17,7 @@ public class Main extends Application {
         SessionManager sessionManager = new SessionManager();
         sessionManager.setSessionParameters();
 
-        String menuType = "main";
+        String menuType = "Main";
         Pane root = new Pane();
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
