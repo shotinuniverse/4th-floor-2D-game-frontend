@@ -2,6 +2,8 @@ package com.shotinuniverse.fourthfloorgamefrontend;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
+import com.shotinuniverse.fourthfloorgamefrontend.entities.*;
+import com.shotinuniverse.fourthfloorgamefrontend.repositories.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -33,10 +35,10 @@ public final class MenuBuilder {
 
         int owner = (int) structureMenu.get("_id");
 
-        addLabelsIfNeed(stage, root, owner);
-        addTextFieldsIfNeed(stage, root, owner);
-        addComboBoxesIfNeed(stage, root, owner);
-        addSlidersIfNeed(stage, root, owner);
+        addLabelsIfNeed(root, owner);
+        addTextFieldsIfNeed(root, owner);
+        addComboBoxesIfNeed(root, owner);
+        addSlidersIfNeed(root, owner);
         addButtonsIfNeed(stage, root, owner);
     }
 
@@ -71,28 +73,35 @@ public final class MenuBuilder {
     }
 
     private static void addButtonsIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
-        String query = getQueryForButtons(idMenu);
+        ArrayList<ButtonEntity> buttons =
+                ButtonRepository.getButtonsForMenu(idMenu);
 
-        ArrayList<Object> buttons = SqlQuery.getObjects(query);
-        for (Object buttonItem: buttons) {
+        for (ButtonEntity buttonItem: buttons) {
             addButton(stage, root, buttonItem);
         }
     }
 
-    private static void addButton(Stage stage, Pane root, Object buttonItem) {
+    private static void addButton(Stage stage, Pane root, ButtonEntity itemEntity) {
         Button button = new Button();
-        HashMap<String, Object> objectButtonItem = ((HashMap) buttonItem);
-        button.setText(String.valueOf(objectButtonItem.get("text")));
 
-        String pathToImage = SessionManager.pathToImages + objectButtonItem.get("image");
-        String style = objectButtonItem.get("style")
+        button.setText(String.valueOf(itemEntity.getText()));
+
+        String pathToImage = SessionManager.pathToImages + itemEntity.getImage();
+        String style = itemEntity.getStyle()
                 + "-fx-background-image: url('" + pathToImage + "');"
                 + "-fx-background-position: center center; "
                 + "-fx-background-repeat: stretch;";
 
         button.setStyle(style);
 
-        setPoints(button, objectButtonItem);
+        int height = itemEntity.getHeight();
+        int width = itemEntity.getWidth();
+        button.setTranslateX(itemEntity.getPointX());
+        button.setTranslateY(itemEntity.getPointY());
+        button.setMaxHeight(height);
+        button.setPrefHeight(height);
+        button.setMaxWidth(width);
+        button.setPrefWidth(width);
 
         ElementAction buttonAction = new ElementAction();
         Map<String, Object> additionalInfo = new HashMap();
@@ -101,235 +110,155 @@ public final class MenuBuilder {
         additionalInfo.put("data", formData);
         additionalInfo.put("rootName", rootName);
 
-        String resource = (String) objectButtonItem.get("resource");
-        String action = (String) objectButtonItem.get("action");
+        String resource = itemEntity.getResource();
+        String action = itemEntity.getAction();
 
         buttonAction.addActionButtonOnClick(button, resource, action, additionalInfo);
         buttonAction.addActionButtonEntered(button);
         buttonAction.addActionButtonExited(button);
 
+        button.setId(String.valueOf(itemEntity.getId()));
+
         root.getChildren().add(button);
     }
 
-    private static void addLabelsIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
-        String query = getQueryForLabels(idMenu);
+    private static void addLabelsIfNeed(Pane root, int idMenu) throws SQLException {
+        ArrayList<LabelEntity> labels =
+                LabelRepository.getLabelsForMenu(idMenu);
 
-        ArrayList<Object> labels = SqlQuery.getObjects(query);
-        for (Object labelItem: labels) {
-            addLabel(stage, root, labelItem);
+        for (LabelEntity labelItem: labels) {
+            addLabel(root, labelItem);
         }
     }
 
-    private static void addLabel(Stage stage, Pane root, Object labelItem) {
+    private static void addLabel(Pane root, LabelEntity itemEntity) {
         Label label = new Label();
-        HashMap<String, Object> objectLabelItem = ((HashMap) labelItem);
-        label.setText(String.valueOf(objectLabelItem.get("text")));
+        label.setText(itemEntity.getText());
 
-        String style = (String) objectLabelItem.get("style");
-        label.setStyle(style);
+        label.setStyle(itemEntity.getStyle());
 
-        setPoints(label, objectLabelItem);
+        int height = itemEntity.getHeight();
+        int width = itemEntity.getWidth();
+        label.setTranslateX(itemEntity.getPointX());
+        label.setTranslateY(itemEntity.getPointY());
+        label.setMaxHeight(height);
+        label.setPrefHeight(height);
+        label.setMaxWidth(width);
+        label.setPrefWidth(width);
+
+        label.setId(String.valueOf(itemEntity.getId()));
 
         root.getChildren().add(label);
     }
 
-    private static void addTextFieldsIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
-        String query = "";
-        if (rootName == "keys") {
-            query = getQueryForTextFieldsKeys(idMenu);
-        } else return;
+    private static void addTextFieldsIfNeed(Pane root, int idMenu) throws SQLException {
+        ArrayList<TextFieldEntity> textFields =
+                TextFieldRepository.getTextFieldsForMenu(idMenu);
 
-        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
-        for (Object textFieldItem: arrayList) {
-            addTextField(stage, root, textFieldItem);
+        for (TextFieldEntity textFieldItem: textFields) {
+            addTextField(root, textFieldItem);
 
             formData.add(textFieldItem);
         }
     }
 
-    private static void addTextField(Stage stage, Pane root, Object textFieldItem) {
+    private static void addTextField(Pane root, TextFieldEntity itemEntity) {
         TextField textField = new TextField();
-        HashMap<String, Object> objectTextFieldItem = ((HashMap) textFieldItem);
-        textField.setPromptText(String.valueOf(objectTextFieldItem.get("text")));
+        if (itemEntity.isHavePresentation())
+            textField.setPromptText(itemEntity.getPresentation());
+        else
+            textField.setPromptText(itemEntity.getText());
 
-        String style = (String) objectTextFieldItem.get("style");
-
-        textField.setStyle(style);
+        textField.setStyle(itemEntity.getStyle());
         textField.setFocusTraversable(false);
-        textField.setId(String.valueOf(objectTextFieldItem.get("_id")));
 
-        if ((int) objectTextFieldItem.get("editable") == 0) {
+        if (itemEntity.getEditable() == 0) {
             textField.setDisable(true);
             textField.setEditable(false);
         }
 
-        setPoints(textField, objectTextFieldItem);
+        int height = itemEntity.getHeight();
+        int width = itemEntity.getWidth();
+        textField.setTranslateX(itemEntity.getPointX());
+        textField.setTranslateY(itemEntity.getPointY());
+        textField.setMaxHeight(height);
+        textField.setPrefHeight(height);
+        textField.setMaxWidth(width);
+        textField.setPrefWidth(width);
+
+        textField.setId(String.valueOf(itemEntity.getId()));
 
         root.getChildren().add(textField);
     }
 
-    private static void addComboBoxesIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
-        String query = "";
-        if (rootName == "screen") {
-            query = getQueryForComboBoxes(idMenu);
-        } else return;
+    private static void addComboBoxesIfNeed(Pane root, int idMenu) throws SQLException {
+        ArrayList<ComboboxEntity> comboBoxes =
+                ComboboxRepository.getComboBoxesForMenu(idMenu);
 
-        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
-        for (Object textFieldItem: arrayList) {
-            addComboBox(stage, root, textFieldItem);
+        for (ComboboxEntity comboboxItem: comboBoxes) {
+            addComboBox(root, comboboxItem);
 
-            formData.add(textFieldItem);
+            formData.add(comboboxItem);
         }
     }
 
-    private static void addComboBox(Stage stage, Pane root, Object comboBoxItem) throws SQLException {
+    private static void addComboBox( Pane root, ComboboxEntity itemEntity) {
         ComboBox<String> comboBox = new ComboBox<>();
-        HashMap<String, Object> objectComboBoxItem = ((HashMap) comboBoxItem);
 
-        String query = String.format("""
-            select
-                value.text as text,
-                av_values.value as available
-            from
-                (select
-                    tb._id as _id,
-                    tb._class as _class,
-                    tb.%s as text
-                from
-                    %s as tb
-                where
-                    _id = %d) as value
-                left outer join available_values as av_values
-                on value._id = av_values.object_id
-                    and value._class = av_values.class    
-            """, objectComboBoxItem.get("column_data"),
-                objectComboBoxItem.get("table_data"), (int) objectComboBoxItem.get("static_id"));
+        comboBox.setValue(itemEntity.getCurrentValue());
+        comboBox.setItems(itemEntity.getAvailableValues());
 
-        ArrayList<Object> values = SqlQuery.getObjects(query);
-        boolean firstRow = false;
-        ObservableList<String> availableValues = FXCollections.observableArrayList();
-        for (Object object: values) {
-            HashMap<String, Object> map = (HashMap) object;
-            if (!firstRow) {
-                firstRow = true;
-                comboBox.setValue((String) map.get("text"));
-            }
-
-            availableValues.add((String) map.get("available"));
-        }
-
-        comboBox.setItems(availableValues);
-
-        String style = (String) objectComboBoxItem.get("style");
-        comboBox.setStyle(style);
+        comboBox.setStyle(itemEntity.getStyle());
         comboBox.setFocusTraversable(false);
-        comboBox.setId(String.valueOf(objectComboBoxItem.get("_id")));
+        comboBox.setId(String.valueOf(itemEntity.getId()));
 
-        setPoints(comboBox, objectComboBoxItem);
+        int height = itemEntity.getHeight();
+        int width = itemEntity.getWidth();
+        comboBox.setTranslateX(itemEntity.getPointX());
+        comboBox.setTranslateY(itemEntity.getPointY());
+        comboBox.setMaxHeight(height);
+        comboBox.setPrefHeight(height);
+        comboBox.setMaxWidth(width);
+        comboBox.setPrefWidth(width);
 
         root.getChildren().add(comboBox);
     }
 
-    private static void addSlidersIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
-        String query = "";
-        if (rootName == "screen") {
-            query = getQueryForSliders(idMenu);
-        } else return;
+    private static void addSlidersIfNeed(Pane root, int idMenu) throws SQLException {
+        ArrayList<SliderEntity> sliders =
+                SliderRepository.getSliderForMenu(idMenu);
 
-        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
-        for (Object sliderItem: arrayList) {
-            addSlider(stage, root, sliderItem);
+        for (SliderEntity sliderItem: sliders) {
+            addSlider(root, sliderItem);
 
             formData.add(sliderItem);
         }
     }
 
-    private static void addSlider(Stage stage, Pane root, Object sliderItem) throws SQLException {
+    private static void addSlider(Pane root, SliderEntity itemEntity) {
         Slider slider = new Slider();
-        HashMap<String, Object> objectSliderItem = ((HashMap) sliderItem);
 
-        String style = (String) objectSliderItem.get("style");
-        slider.setStyle(style);
+        slider.setStyle(itemEntity.getStyle());
         slider.setFocusTraversable(false);
-        slider.setId(String.valueOf(objectSliderItem.get("_id")));
+        slider.setId(String.valueOf(itemEntity.getId()));
 
-        setPoints(slider, objectSliderItem);
+        int height = itemEntity.getHeight();
+        int width = itemEntity.getWidth();
+        slider.setTranslateX(itemEntity.getPointX());
+        slider.setTranslateY(itemEntity.getPointY());
+        slider.setMaxHeight(height);
+        slider.setPrefHeight(height);
+        slider.setMaxWidth(width);
+        slider.setPrefWidth(width);
 
-        String query = String.format("""
-            select
-                tb.%s as value
-            from
-                %s as tb
-            where
-                _id = %d    
-            """, objectSliderItem.get("column_data"),
-                objectSliderItem.get("table_data"), (int) objectSliderItem.get("static_id"));
+        slider.setValue(itemEntity.getCurrentValue());
 
-        Map<String, Object> map = SqlQuery.getObjectFromTable(query);
-        if (map.containsKey("value")) {
-            slider.setValue(Integer.parseInt((String) map.get("value")));
-        }
-
-        slider.setMin(0);
-        slider.setMax(100);
-
-        slider.setMajorTickUnit(50);
-        slider.setMinorTickCount(2);
+        slider.setMin(itemEntity.getMin());
+        slider.setMax(itemEntity.getMax());
+        slider.setMajorTickUnit(itemEntity.getMajorTickUnit());
+        slider.setMinorTickCount(itemEntity.getMinorTickCount());
 
         root.getChildren().add(slider);
-    }
-
-    private static void setPoints(Object elementObject, HashMap<String, Object> mapItem) {
-        double pointX = getValuePoint(mapItem, "pointX");
-        double pointY = getValuePoint(mapItem, "pointY");
-        double height  = getValuePoint(mapItem, "height");
-        double width  = getValuePoint(mapItem, "width");
-
-        if(elementObject instanceof Button button) {
-            button.setTranslateX(pointX);
-            button.setTranslateY(pointY);
-            button.setMaxHeight(height);
-            button.setPrefHeight(height);
-            button.setMaxWidth(width);
-            button.setPrefWidth(width);
-        } else if(elementObject instanceof Label label) {
-            label.setTranslateX(pointX);
-            label.setTranslateY(pointY);
-            label.setMaxHeight(height);
-            label.setPrefHeight(height);
-            label.setMaxWidth(width);
-            label.setPrefWidth(width);
-        } else if(elementObject instanceof TextField textField) {
-            textField.setTranslateX(pointX);
-            textField.setTranslateY(pointY);
-            textField.setMaxHeight(height);
-            textField.setPrefHeight(height);
-            textField.setMaxWidth(width);
-            textField.setPrefWidth(width);
-        } else if(elementObject instanceof ComboBox<?> comboBox) {
-            comboBox.setTranslateX(pointX);
-            comboBox.setTranslateY(pointY);
-            comboBox.setMaxHeight(height);
-            comboBox.setPrefHeight(height);
-            comboBox.setMaxWidth(width);
-            comboBox.setPrefWidth(width);
-        } else if(elementObject instanceof Slider slider) {
-            slider.setTranslateX(pointX);
-            slider.setTranslateY(pointY);
-            slider.setMaxHeight(height);
-            slider.setPrefHeight(height);
-            slider.setMaxWidth(width);
-            slider.setPrefWidth(width);
-        }
-    }
-
-    private static double getValuePoint(HashMap<String, Object> mapItem, String key) {
-        double value = 0.0;
-        if (mapItem.containsKey(key)){
-            value = (int) mapItem.get(key);
-        }
-
-        return value;
     }
 
     //region sql query texts
@@ -344,116 +273,6 @@ public final class MenuBuilder {
                 where
                     menu.resolution = '%dx%d' and menu_types.name = '%s'
                 """, SessionManager.resolutionWidth, SessionManager.resolutionHeight, type);
-    }
-
-    public static String getQueryForButtons(int ownerId) {
-        return String.format("""
-                select
-                    buttons.*, synonyms.synonym as text,
-                    points.pointX as pointX, points.pointY as pointY,
-                    points.width as width, points.height as height
-                from
-                    buttons as buttons
-                    left outer join synonyms as synonyms
-                        on buttons._id = synonyms.object_id
-                        and buttons._class = synonyms.class
-                        and synonyms.language_code = '%s'
-                    left outer join points as points
-                        on buttons.points = points._id
-                where
-                    buttons._owner = '%d'
-                order by
-                    buttons."order" asc
-                """, SessionManager.language, ownerId);
-    }
-
-    public static String getQueryForLabels(int ownerId) {
-        return String.format("""
-                select
-                    labels.*, synonyms.synonym as text,
-                    points.pointX as pointX, points.pointY as pointY,
-                    points.width as width, points.height as height
-                from
-                    labels as labels
-                    left outer join synonyms as synonyms
-                        on labels._id = synonyms.object_id
-                        and labels._class = synonyms.class
-                        and synonyms.language_code = '%s'
-                    left outer join points as points
-                        on labels.points = points._id
-                where
-                    labels._owner = '%d'
-                order by
-                    labels."order" asc
-                """, SessionManager.language, ownerId);
-    }
-
-    public static String getQueryForTextFieldsKeys(int ownerId) {
-        return String.format("""
-                select
-                   text_fields.*,
-                   case
-                       when keys_values.value is null
-                           then keys_alt_values.alternative_presentation
-                       else
-                           keys_values.presentation
-                   end as text,
-                   points.pointX as pointX, points.pointY as pointY,
-                   points.width as width, points.height as height
-               from
-                   text_fields as text_fields
-                       left outer join points as points
-                                       on text_fields.points = points._id
-                       left outer join keys as keys_values
-                                       on text_fields.static_id = keys_values._id
-                                           and text_fields.column_data = 'value'
-                       left outer join keys as keys_alt_values
-                                       on text_fields.static_id = keys_alt_values._id
-                                           and text_fields.column_data = 'alternative_value'
-               where
-                       text_fields._owner = '%d'
-               order by
-                   text_fields."order" asc
-                """, ownerId);
-    }
-
-    public static String getQueryForComboBoxes(int ownerId) {
-        return String.format("""
-                select
-                   combo_boxes.*,
-                   points.pointX as pointX, points.pointY as pointY,
-                   points.width as width, points.height as height
-               from
-                   combo_boxes as combo_boxes
-                       left outer join points as points
-                       on combo_boxes.points = points._id
-               where
-                       combo_boxes._owner = '%d'
-               order by
-                   combo_boxes."order" asc
-                """, ownerId);
-    }
-
-    public static String getQueryForSliders(int ownerId) {
-        return String.format("""
-                select
-                   sliders.*,
-                   points.pointX as pointX, points.pointY as pointY,
-                   points.width as width, points.height as height
-               from
-                   sliders as sliders
-                       left outer join points as points
-                       on sliders.points = points._id
-               where
-                       sliders._owner = '%d'
-               order by
-                   sliders."order" asc
-                """, ownerId);
-    }
-
-    public static String getQueryForComboBoxesValues() {
-
-        return "";
     }
     //endregion
 }

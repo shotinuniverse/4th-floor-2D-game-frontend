@@ -1,6 +1,9 @@
 package com.shotinuniverse.fourthfloorgamefrontend;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
+import com.shotinuniverse.fourthfloorgamefrontend.entities.ComboboxEntity;
+import com.shotinuniverse.fourthfloorgamefrontend.entities.SliderEntity;
+import com.shotinuniverse.fourthfloorgamefrontend.entities.TextFieldEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Keys;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Main;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Screen;
@@ -125,9 +128,7 @@ public class ElementAction {
 
         ObservableList<Node> observableList = group.getChildren();
         for (Object rowData: data) {
-            HashMap<String, Object> map = (HashMap) rowData;
-            String stringId = String.valueOf(map.get("_id"));
-            setDataFromElement(observableList, stringId, outputData, map);
+            setDataFromElement(observableList, outputData, rowData);
         }
 
         if (outputData.size() > 0) {
@@ -140,38 +141,42 @@ public class ElementAction {
     }
 
     private void setDataFromElement(ObservableList<Node> observableList,
-                                    String stringId, ArrayList<Map<String, Object>> outputData,
-                                    HashMap<String, Object> map) {
+                                    ArrayList<Map<String, Object>> outputData,
+                                    Object rowData) {
         for(int i = 0; i < observableList.size(); i++) {
             Object currentField = observableList.get(i);
             if (currentField instanceof TextField textField
-                    && ((String) map.get("_class")).contains("textfield")
-                    && Objects.equals(textField.getId(), stringId)) {
+                    && rowData instanceof TextFieldEntity itemEntity
+                    && Objects.equals(textField.getId(), String.valueOf(itemEntity.getId()))) {
                 String text = textField.getText();
-                if (!text.isEmpty() && text != map.get("text")) {
-                    fillOutputData(outputData, map, text);
+                if (!text.isEmpty() && text != itemEntity.getText()) {
+                    fillOutputData(outputData, itemEntity.getValueRowId(),
+                            itemEntity.getValueTable(), itemEntity.getValueColumn(), text);
                 }
             } else if (currentField instanceof ComboBox<?> comboBox
-                    && ((String) map.get("_class")).contains("combobox")
-                    && Objects.equals(comboBox.getId(), stringId)) {
+                    && rowData instanceof ComboboxEntity itemEntity
+                    && Objects.equals(comboBox.getId(), String.valueOf(itemEntity.getId()))) {
                 String text = String.valueOf(comboBox.getValue());
                 if (!text.isEmpty()) {
-                    fillOutputData(outputData, map, text);
+                    fillOutputData(outputData, itemEntity.getValueRowId(),
+                            itemEntity.getValueTable(), itemEntity.getValueColumn(), text);
                 }
             } else if (currentField instanceof Slider slider
-                    && ((String) map.get("_class")).contains("slider")
-                    && Objects.equals(slider.getId(), stringId)) {
+                    && rowData instanceof SliderEntity itemEntity
+                    && Objects.equals(slider.getId(), String.valueOf(itemEntity.getId()))) {
                 Double value = slider.getValue();
-                fillOutputData(outputData, map, String.valueOf(Math.round(value)));
+                fillOutputData(outputData, itemEntity.getValueRowId(),
+                        itemEntity.getValueTable(), itemEntity.getValueColumn(), String.valueOf(Math.round(value)));
             }
         }
     }
 
-    private void fillOutputData(ArrayList<Map<String, Object>> outputData, HashMap<String, Object> map, String value) {
+    private void fillOutputData(ArrayList<Map<String, Object>> outputData, int id,
+                                String tableName, String columnName, String value) {
         Map<String, Object> outputMap = new HashMap<>();
-        outputMap.put("_id", map.get("static_id"));
-        outputMap.put("tableName", map.get("table_data"));
-        outputMap.put("columnName", map.get("column_data"));
+        outputMap.put("_id", id);
+        outputMap.put("tableName", tableName);
+        outputMap.put("columnName", columnName);
         outputMap.put("value", value);
 
         outputData.add(outputMap);
