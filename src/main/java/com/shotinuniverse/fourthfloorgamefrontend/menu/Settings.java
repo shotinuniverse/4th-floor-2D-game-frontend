@@ -14,7 +14,7 @@ public class Settings extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
-        String menuType = "settings";
+        String menuType = "Settings";
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
         paintMenu(primaryStage, root, structureMenu);

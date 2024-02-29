@@ -4,10 +4,7 @@ import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.ComboboxEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.SliderEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.TextFieldEntity;
-import com.shotinuniverse.fourthfloorgamefrontend.menu.Keys;
-import com.shotinuniverse.fourthfloorgamefrontend.menu.Main;
-import com.shotinuniverse.fourthfloorgamefrontend.menu.Screen;
-import com.shotinuniverse.fourthfloorgamefrontend.menu.Settings;
+import com.shotinuniverse.fourthfloorgamefrontend.menu.*;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -94,6 +91,17 @@ public class ElementAction {
                             Screen screen = new Screen();
                             try {
                                 screen.start((Stage) additionalInfo.get("stage"));
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            {
+
+                            }
+                        }
+                        case "sound" -> {
+                            Sound sound = new Sound();
+                            try {
+                                sound.start((Stage) additionalInfo.get("stage"));
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }

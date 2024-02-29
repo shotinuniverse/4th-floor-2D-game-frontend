@@ -10,12 +10,12 @@ import java.util.Map;
 import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.getStructureMenu;
 import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.paintMenu;
 
-public class Keys extends Application {
+public class Sound extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
-        String menuType = "Keys";
+        String menuType = "Sound";
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
         paintMenu(primaryStage, root, structureMenu);
