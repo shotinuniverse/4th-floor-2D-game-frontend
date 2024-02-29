@@ -2,9 +2,9 @@ package com.shotinuniverse.fourthfloorgamefrontend;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -15,7 +15,12 @@ import java.util.*;
 
 public final class MenuBuilder {
 
+    private static String rootName;
+    private static ArrayList<Object> formData = new ArrayList<Object>();
+
     public static Map<String, Object> getStructureMenu(String type) throws SQLException {
+        rootName = type;
+
         String query = getQueryForMenu(type);
 
         return SqlQuery.getObjectFromTable(query);
@@ -27,14 +32,18 @@ public final class MenuBuilder {
         setGroupProperties(root, structureMenu);
 
         int owner = (int) structureMenu.get("_id");
-        addButtonsIfNeed(stage, root, owner);
+
         addLabelsIfNeed(stage, root, owner);
         addTextFieldsIfNeed(stage, root, owner);
+        addComboBoxesIfNeed(stage, root, owner);
+        addSlidersIfNeed(stage, root, owner);
+        addButtonsIfNeed(stage, root, owner);
     }
 
     private static void addImageViewTitle(Pane root) {
-        String pathToImage = SessionManager.pathToImages.substring(1) + "menu-label-1920-1080.png";
-        String imagePath = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
+        String pathToImage = SessionManager.getRelativePathToImage() + "menu-label-1920-1080.png";
+        String imagePath = SessionManager.getPathToResource(pathToImage);
+
         Image image = new Image(imagePath, 863, 136, false, false);
         ImageView imageView = new ImageView(image);
         imageView.setX(150);
@@ -51,11 +60,13 @@ public final class MenuBuilder {
 
     private static void setGroupProperties(Pane root, Map<String, Object> structureMenu) {
         if (structureMenu.containsKey("image")) {
-            String pathToImage = SessionManager.pathToImages.substring(1) + structureMenu.get("image");
-            String image = SessionManager.classLoader.getResource(pathToImage).toExternalForm();
+            String pathToImage = SessionManager.getRelativePathToImage() + structureMenu.get("image");
+            String image = SessionManager.getPathToResource(pathToImage);
             root.setStyle("-fx-background-image: url('" + image + "'); " +
                     "-fx-background-position: center center; " +
                     "-fx-background-repeat: stretch;");
+
+            //root.
         }
     }
 
@@ -70,42 +81,25 @@ public final class MenuBuilder {
 
     private static void addButton(Stage stage, Pane root, Object buttonItem) {
         Button button = new Button();
-        HashMap objectButtonItem = ((HashMap) buttonItem);
+        HashMap<String, Object> objectButtonItem = ((HashMap) buttonItem);
         button.setText(String.valueOf(objectButtonItem.get("text")));
 
         String pathToImage = SessionManager.pathToImages + objectButtonItem.get("image");
-        String style = objectButtonItem.get("style") + "-fx-background-image: url('" + pathToImage + "')";
+        String style = objectButtonItem.get("style")
+                + "-fx-background-image: url('" + pathToImage + "');"
+                + "-fx-background-position: center center; "
+                + "-fx-background-repeat: stretch;";
 
         button.setStyle(style);
 
-        if (objectButtonItem.containsKey("pointX")){
-            int pointX = (int) objectButtonItem.get("pointX");
-            button.setTranslateX((double) pointX);
-        }
+        setPoints(button, objectButtonItem);
 
-        if (objectButtonItem.containsKey("pointY")){
-            int pointY = (int) objectButtonItem.get("pointY");
-            button.setTranslateY((double) pointY);
-        }
-
-        int height = 0;
-        int width = 0;
-        if (objectButtonItem.containsKey("height")){
-            height = (int) objectButtonItem.get("height");
-            button.setMaxHeight((double) height);
-        }
-
-        if (objectButtonItem.containsKey("width")){
-            width = (int) objectButtonItem.get("width");
-            button.setMaxWidth((double) width);
-        }
-
-        button.setPrefSize(width, height);
-
-        ElementAction buttonAction = new ElementAction(stage);
+        ElementAction buttonAction = new ElementAction();
         Map<String, Object> additionalInfo = new HashMap();
         additionalInfo.put("stage", stage);
         additionalInfo.put("group", root);
+        additionalInfo.put("data", formData);
+        additionalInfo.put("rootName", rootName);
 
         String resource = (String) objectButtonItem.get("resource");
         String action = (String) objectButtonItem.get("action");
@@ -128,85 +122,217 @@ public final class MenuBuilder {
 
     private static void addLabel(Stage stage, Pane root, Object labelItem) {
         Label label = new Label();
-        HashMap objectButtonItem = ((HashMap) labelItem);
-        label.setText(String.valueOf(objectButtonItem.get("text")));
+        HashMap<String, Object> objectLabelItem = ((HashMap) labelItem);
+        label.setText(String.valueOf(objectLabelItem.get("text")));
 
-        String style = (String) objectButtonItem.get("style");
-
+        String style = (String) objectLabelItem.get("style");
         label.setStyle(style);
 
-        if (objectButtonItem.containsKey("pointX")){
-            int pointX = (int) objectButtonItem.get("pointX");
-            label.setTranslateX((double) pointX);
-        }
-
-        if (objectButtonItem.containsKey("pointY")){
-            int pointY = (int) objectButtonItem.get("pointY");
-            label.setTranslateY((double) pointY);
-        }
-
-        int height = 0;
-        int width = 0;
-        if (objectButtonItem.containsKey("height")){
-            height = (int) objectButtonItem.get("height");
-            label.setMaxHeight((double) height);
-        }
-
-        if (objectButtonItem.containsKey("width")){
-            width = (int) objectButtonItem.get("width");
-            label.setMaxWidth((double) width);
-        }
-
-        label.setPrefSize(width, height);
+        setPoints(label, objectLabelItem);
 
         root.getChildren().add(label);
     }
 
     private static void addTextFieldsIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
-        String query = getQueryForTextFields(idMenu);
+        String query = "";
+        if (rootName == "keys") {
+            query = getQueryForTextFieldsKeys(idMenu);
+        } else return;
 
-        ArrayList<Object> textFields = SqlQuery.getObjects(query);
-        for (Object textFieldItem: textFields) {
+        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
+        for (Object textFieldItem: arrayList) {
             addTextField(stage, root, textFieldItem);
+
+            formData.add(textFieldItem);
         }
     }
 
     private static void addTextField(Stage stage, Pane root, Object textFieldItem) {
         TextField textField = new TextField();
-        HashMap objectButtonItem = ((HashMap) textFieldItem);
-        textField.setPromptText(String.valueOf(objectButtonItem.get("text")));
+        HashMap<String, Object> objectTextFieldItem = ((HashMap) textFieldItem);
+        textField.setPromptText(String.valueOf(objectTextFieldItem.get("text")));
 
-        String style = (String) objectButtonItem.get("style");
+        String style = (String) objectTextFieldItem.get("style");
 
         textField.setStyle(style);
+        textField.setFocusTraversable(false);
+        textField.setId(String.valueOf(objectTextFieldItem.get("_id")));
 
-        if (objectButtonItem.containsKey("pointX")){
-            int pointX = (int) objectButtonItem.get("pointX");
-            textField.setTranslateX((double) pointX);
+        if ((int) objectTextFieldItem.get("editable") == 0) {
+            textField.setDisable(true);
+            textField.setEditable(false);
         }
 
-        if (objectButtonItem.containsKey("pointY")){
-            int pointY = (int) objectButtonItem.get("pointY");
-            textField.setTranslateY((double) pointY);
-        }
-
-        int height = 0;
-        int width = 0;
-        if (objectButtonItem.containsKey("height")){
-            height = (int) objectButtonItem.get("height");
-            textField.setMaxHeight((double) height);
-        }
-
-        if (objectButtonItem.containsKey("width")){
-            width = (int) objectButtonItem.get("width");
-            textField.setMaxWidth((double) width);
-        }
-
-        textField.setPrefSize(width, height);
+        setPoints(textField, objectTextFieldItem);
 
         root.getChildren().add(textField);
     }
 
+    private static void addComboBoxesIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
+        String query = "";
+        if (rootName == "screen") {
+            query = getQueryForComboBoxes(idMenu);
+        } else return;
+
+        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
+        for (Object textFieldItem: arrayList) {
+            addComboBox(stage, root, textFieldItem);
+
+            formData.add(textFieldItem);
+        }
+    }
+
+    private static void addComboBox(Stage stage, Pane root, Object comboBoxItem) throws SQLException {
+        ComboBox<String> comboBox = new ComboBox<>();
+        HashMap<String, Object> objectComboBoxItem = ((HashMap) comboBoxItem);
+
+        String query = String.format("""
+            select
+                value.text as text,
+                av_values.value as available
+            from
+                (select
+                    tb._id as _id,
+                    tb._class as _class,
+                    tb.%s as text
+                from
+                    %s as tb
+                where
+                    _id = %d) as value
+                left outer join available_values as av_values
+                on value._id = av_values.object_id
+                    and value._class = av_values.class    
+            """, objectComboBoxItem.get("column_data"),
+                objectComboBoxItem.get("table_data"), (int) objectComboBoxItem.get("static_id"));
+
+        ArrayList<Object> values = SqlQuery.getObjects(query);
+        boolean firstRow = false;
+        ObservableList<String> availableValues = FXCollections.observableArrayList();
+        for (Object object: values) {
+            HashMap<String, Object> map = (HashMap) object;
+            if (!firstRow) {
+                firstRow = true;
+                comboBox.setValue((String) map.get("text"));
+            }
+
+            availableValues.add((String) map.get("available"));
+        }
+
+        comboBox.setItems(availableValues);
+
+        String style = (String) objectComboBoxItem.get("style");
+        comboBox.setStyle(style);
+        comboBox.setFocusTraversable(false);
+        comboBox.setId(String.valueOf(objectComboBoxItem.get("_id")));
+
+        setPoints(comboBox, objectComboBoxItem);
+
+        root.getChildren().add(comboBox);
+    }
+
+    private static void addSlidersIfNeed(Stage stage, Pane root, int idMenu) throws SQLException {
+        String query = "";
+        if (rootName == "screen") {
+            query = getQueryForSliders(idMenu);
+        } else return;
+
+        ArrayList<Object> arrayList = SqlQuery.getObjects(query);
+        for (Object sliderItem: arrayList) {
+            addSlider(stage, root, sliderItem);
+
+            formData.add(sliderItem);
+        }
+    }
+
+    private static void addSlider(Stage stage, Pane root, Object sliderItem) throws SQLException {
+        Slider slider = new Slider();
+        HashMap<String, Object> objectSliderItem = ((HashMap) sliderItem);
+
+        String style = (String) objectSliderItem.get("style");
+        slider.setStyle(style);
+        slider.setFocusTraversable(false);
+        slider.setId(String.valueOf(objectSliderItem.get("_id")));
+
+        setPoints(slider, objectSliderItem);
+
+        String query = String.format("""
+            select
+                tb.%s as value
+            from
+                %s as tb
+            where
+                _id = %d    
+            """, objectSliderItem.get("column_data"),
+                objectSliderItem.get("table_data"), (int) objectSliderItem.get("static_id"));
+
+        Map<String, Object> map = SqlQuery.getObjectFromTable(query);
+        if (map.containsKey("value")) {
+            slider.setValue(Integer.parseInt((String) map.get("value")));
+        }
+
+        slider.setMin(0);
+        slider.setMax(100);
+
+        slider.setMajorTickUnit(50);
+        slider.setMinorTickCount(2);
+
+        root.getChildren().add(slider);
+    }
+
+    private static void setPoints(Object elementObject, HashMap<String, Object> mapItem) {
+        double pointX = getValuePoint(mapItem, "pointX");
+        double pointY = getValuePoint(mapItem, "pointY");
+        double height  = getValuePoint(mapItem, "height");
+        double width  = getValuePoint(mapItem, "width");
+
+        if(elementObject instanceof Button button) {
+            button.setTranslateX(pointX);
+            button.setTranslateY(pointY);
+            button.setMaxHeight(height);
+            button.setPrefHeight(height);
+            button.setMaxWidth(width);
+            button.setPrefWidth(width);
+        } else if(elementObject instanceof Label label) {
+            label.setTranslateX(pointX);
+            label.setTranslateY(pointY);
+            label.setMaxHeight(height);
+            label.setPrefHeight(height);
+            label.setMaxWidth(width);
+            label.setPrefWidth(width);
+        } else if(elementObject instanceof TextField textField) {
+            textField.setTranslateX(pointX);
+            textField.setTranslateY(pointY);
+            textField.setMaxHeight(height);
+            textField.setPrefHeight(height);
+            textField.setMaxWidth(width);
+            textField.setPrefWidth(width);
+        } else if(elementObject instanceof ComboBox<?> comboBox) {
+            comboBox.setTranslateX(pointX);
+            comboBox.setTranslateY(pointY);
+            comboBox.setMaxHeight(height);
+            comboBox.setPrefHeight(height);
+            comboBox.setMaxWidth(width);
+            comboBox.setPrefWidth(width);
+        } else if(elementObject instanceof Slider slider) {
+            slider.setTranslateX(pointX);
+            slider.setTranslateY(pointY);
+            slider.setMaxHeight(height);
+            slider.setPrefHeight(height);
+            slider.setMaxWidth(width);
+            slider.setPrefWidth(width);
+        }
+    }
+
+    private static double getValuePoint(HashMap<String, Object> mapItem, String key) {
+        double value = 0.0;
+        if (mapItem.containsKey(key)){
+            value = (int) mapItem.get(key);
+        }
+
+        return value;
+    }
+
+    //region sql query texts
     public static String getQueryForMenu(String type) {
         return String.format("""
                 select
@@ -223,7 +349,7 @@ public final class MenuBuilder {
     public static String getQueryForButtons(int ownerId) {
         return String.format("""
                 select
-                    buttons.*, synonyms.synonim as text,
+                    buttons.*, synonyms.synonym as text,
                     points.pointX as pointX, points.pointY as pointY,
                     points.width as width, points.height as height
                 from
@@ -244,7 +370,7 @@ public final class MenuBuilder {
     public static String getQueryForLabels(int ownerId) {
         return String.format("""
                 select
-                    labels.*, synonyms.synonim as text,
+                    labels.*, synonyms.synonym as text,
                     points.pointX as pointX, points.pointY as pointY,
                     points.width as width, points.height as height
                 from
@@ -262,7 +388,7 @@ public final class MenuBuilder {
                 """, SessionManager.language, ownerId);
     }
 
-    public static String getQueryForTextFields(int ownerId) {
+    public static String getQueryForTextFieldsKeys(int ownerId) {
         return String.format("""
                 select
                    text_fields.*,
@@ -290,4 +416,44 @@ public final class MenuBuilder {
                    text_fields."order" asc
                 """, ownerId);
     }
+
+    public static String getQueryForComboBoxes(int ownerId) {
+        return String.format("""
+                select
+                   combo_boxes.*,
+                   points.pointX as pointX, points.pointY as pointY,
+                   points.width as width, points.height as height
+               from
+                   combo_boxes as combo_boxes
+                       left outer join points as points
+                       on combo_boxes.points = points._id
+               where
+                       combo_boxes._owner = '%d'
+               order by
+                   combo_boxes."order" asc
+                """, ownerId);
+    }
+
+    public static String getQueryForSliders(int ownerId) {
+        return String.format("""
+                select
+                   sliders.*,
+                   points.pointX as pointX, points.pointY as pointY,
+                   points.width as width, points.height as height
+               from
+                   sliders as sliders
+                       left outer join points as points
+                       on sliders.points = points._id
+               where
+                       sliders._owner = '%d'
+               order by
+                   sliders."order" asc
+                """, ownerId);
+    }
+
+    public static String getQueryForComboBoxesValues() {
+
+        return "";
+    }
+    //endregion
 }

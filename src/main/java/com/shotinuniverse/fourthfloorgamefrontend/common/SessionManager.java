@@ -8,6 +8,7 @@ import javafx.stage.Screen;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public final class SessionManager {
 
@@ -47,8 +48,8 @@ public final class SessionManager {
             SessionManager.resolutionHeight = (int) screenBounds.getHeight();
         } else {
             String[] arrayString = resolutionValue.split("x");
-            SessionManager.resolutionWidth = Integer.valueOf(arrayString[0]);
-            SessionManager.resolutionHeight = Integer.valueOf(arrayString[1]);
+            SessionManager.resolutionWidth = Integer.parseInt(arrayString[0]);
+            SessionManager.resolutionHeight = Integer.parseInt(arrayString[1]);
         }
     }
 
@@ -61,21 +62,27 @@ public final class SessionManager {
     }
 
     private void setOtherParams(String paramName, String paramValue){
-        if (paramName.equals("pathToLocalResources")) {
-            this.pathToLocalResources = paramValue;
-        } else if (paramName.equals("pathToImages")) {
-            this.pathToImages = paramValue;
-        } else if (paramName.equals("language")) {
-            this.language = paramValue;
-        } else if (paramName.equals("serverName")) {
-            this.serverName = paramValue;
-        } else if (paramName.equals("serverPort")) {
-            this.serverPort = Integer.valueOf(paramValue);
+        switch (paramName) {
+            case "pathToLocalResources" -> pathToLocalResources = paramValue;
+            case "pathToImages" -> pathToImages = paramValue;
+            case "language" -> language = paramValue;
+            case "serverName" -> serverName = paramValue;
+            case "serverPort" -> serverPort = Integer.parseInt(paramValue);
         }
     }
 
     public void setScene(Pane root) {
-        this.scene = new Scene(root,
+        scene = new Scene(root,
                 SessionManager.resolutionWidth, SessionManager.resolutionHeight);
+        scene.getStylesheets().add(pathToLocalResources + "style.css");
+    }
+
+    public static String getRelativePathToImage() {
+        return SessionManager.pathToImages.substring(1);
+    }
+
+    public static String getPathToResource(String pathToObject) {
+        return Objects.requireNonNull(
+                SessionManager.classLoader.getResource(pathToObject)).toExternalForm();
     }
 }

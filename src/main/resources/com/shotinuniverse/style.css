@@ -1,0 +1,24 @@
+.text-field {
+    -fx-border-width: 0 0 0 0;
+}
+
+.text-field:focused {
+    -fx-border-color: black;
+    -fx-border-width: 0 0 2 0;
+}
+
+.combo-box .arrow {
+    -fx-background-color: white;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: black;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: black;
+}
+
+.combo-box .list-view {
+    -fx-background-color: transparent;
+}

@@ -7,14 +7,15 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
+import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.getStructureMenu;
+import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.paintMenu;
 
-public class Settings extends Application {
+public class Screen extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
-        String menuType = "settings";
+        String menuType = "screen";
 
         Map<String, Object> structureMenu = getStructureMenu(menuType);
         paintMenu(primaryStage, root, structureMenu);

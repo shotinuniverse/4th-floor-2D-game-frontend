@@ -2,7 +2,6 @@ package com.shotinuniverse.fourthfloorgamefrontend.menu;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -27,7 +26,7 @@ public class Main extends Application {
         if (SessionManager.scene == null) {
             sessionManager.setScene(root);
             stage.setScene(sessionManager.scene);
-            stage.setFullScreen(true);
+            stage.setFullScreen(false);
             stage.show();
         } else {
             SessionManager.scene.setRoot(root);
