@@ -1,10 +1,10 @@
 package com.shotinuniverse.fourthfloorgamefrontend;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
+import com.shotinuniverse.fourthfloorgamefrontend.engine.Character;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.ComboboxEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.SliderEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.TextFieldEntity;
-import com.shotinuniverse.fourthfloorgamefrontend.menu.*;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -19,6 +19,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +35,11 @@ public class ElementAction {
 
     public void addActionButtonOnClick(Button currentButton, String resource, String action, Map<String, Object> additionalInfo) {
 
+        Stage stage = (Stage) additionalInfo.get("stage");
+        Pane pane = (Pane) additionalInfo.get("group");
+        String className = (String) additionalInfo.get("className");
+        ArrayList<Object> addData = (ArrayList<Object>) additionalInfo.get("data");
+
         EventHandler<MouseEvent> leftClickHandler = event -> {
             if (MouseButton.PRIMARY.equals(event.getButton())){
                 if (resource.isEmpty()){
@@ -43,72 +50,30 @@ public class ElementAction {
                         }
                         case "save" -> {
                             try {
-                                saveDataInDatabaseFromForm(
-                                        (ArrayList<Object>) additionalInfo.get("data"),
-                                        (Pane) additionalInfo.get("group"),
-                                        (String) additionalInfo.get("rootName"));
+                                saveDataInDatabaseFromForm(addData, pane, className);
                             } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        case "start" -> {
+                            Game game = new Game(1);
+                            try {
+                                game.start(stage);
+                            } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
                         }
                     }
                 } else {
-                    switch (resource) {
-                        case "main" -> {
-                            Main main = new Main();
-                            try {
-                                main.start((Stage) additionalInfo.get("stage"));
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                            {
-
-                            }
-                        }
-                        case "settings" -> {
-                            Settings settings = new Settings();
-                            try {
-                                settings.start((Stage) additionalInfo.get("stage"));
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                            {
-
-                            }
-                        }
-                        case "keys" -> {
-                            Keys keys = new Keys();
-                            try {
-                                keys.start((Stage) additionalInfo.get("stage"));
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                            {
-
-                            }
-                        }
-                        case "screen" -> {
-                            Screen screen = new Screen();
-                            try {
-                                screen.start((Stage) additionalInfo.get("stage"));
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                            {
-
-                            }
-                        }
-                        case "sound" -> {
-                            Sound sound = new Sound();
-                            try {
-                                sound.start((Stage) additionalInfo.get("stage"));
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                            {
-
-                            }
-                        }
+                    try {
+                        Class formClass = Class.forName("com.shotinuniverse.fourthfloorgamefrontend.menu." + resource);
+                        Constructor constructor = formClass.getConstructor();
+                        Object form = constructor.newInstance();
+                        java.lang.reflect.Method method = formClass.getDeclaredMethod("start", Stage.class);
+                        method.invoke(form, stage);
+                    } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                             IllegalAccessException | InstantiationException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
@@ -131,7 +96,7 @@ public class ElementAction {
         currentButton.setOnMouseExited(e -> currentButton.setEffect(setBrightness));
     }
 
-    private void saveDataInDatabaseFromForm(ArrayList<Object> data, Pane group, String rootName) throws SQLException {
+    private void saveDataInDatabaseFromForm(ArrayList<Object> data, Pane group, String className) throws SQLException {
         ArrayList<Map<String, Object>> outputData = new ArrayList<>();
 
         ObservableList<Node> observableList = group.getChildren();
@@ -140,7 +105,7 @@ public class ElementAction {
         }
 
         if (outputData.size() > 0) {
-            if (Objects.equals(rootName, "keys")) {
+            if (Objects.equals(className, "Keys")) {
                 updateKeys(outputData);
             } else {
                 updateData(outputData);

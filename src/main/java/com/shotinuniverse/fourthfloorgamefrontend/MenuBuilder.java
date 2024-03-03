@@ -17,11 +17,11 @@ import java.util.*;
 
 public final class MenuBuilder {
 
-    private static String rootName;
+    private static String className;
     private static ArrayList<Object> formData = new ArrayList<Object>();
 
     public static Map<String, Object> getStructureMenu(String type) throws SQLException {
-        rootName = type;
+        className = type;
 
         String query = getQueryForMenu(type);
 
@@ -108,7 +108,7 @@ public final class MenuBuilder {
         additionalInfo.put("stage", stage);
         additionalInfo.put("group", root);
         additionalInfo.put("data", formData);
-        additionalInfo.put("rootName", rootName);
+        additionalInfo.put("className", className);
 
         String resource = itemEntity.getResource();
         String action = itemEntity.getAction();
