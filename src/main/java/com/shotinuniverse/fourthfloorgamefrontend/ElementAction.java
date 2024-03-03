@@ -2,6 +2,7 @@ package com.shotinuniverse.fourthfloorgamefrontend;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.Character;
+import com.shotinuniverse.fourthfloorgamefrontend.engine.PhysicConst;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.ComboboxEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.SliderEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.TextFieldEntity;
@@ -56,6 +57,12 @@ public class ElementAction {
                             }
                         }
                         case "start" -> {
+                            try {
+                                PhysicConst physicConst = new PhysicConst();
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+
                             Game game = new Game(1);
                             try {
                                 game.start(stage);
