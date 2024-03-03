@@ -1,6 +1,6 @@
 package com.shotinuniverse.fourthfloorgamefrontend.entities;
 
-public abstract class Points implements Position{
+public class Points implements Position{
     private int pointX;
     private int pointY;
     private int height;

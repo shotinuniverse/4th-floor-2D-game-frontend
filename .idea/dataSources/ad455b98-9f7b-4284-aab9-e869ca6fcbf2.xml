@@ -1470,483 +1470,641 @@
     <table id="518" parent="177" name="action_types"/>
     <table id="519" parent="177" name="available_values"/>
     <table id="520" parent="177" name="buttons"/>
-    <table id="521" parent="177" name="editable_elements"/>
-    <table id="522" parent="177" name="keys"/>
-    <table id="523" parent="177" name="menu"/>
-    <table id="524" parent="177" name="menu_types"/>
-    <table id="525" parent="177" name="points"/>
-    <table id="526" parent="177" name="sqlite_master">
+    <table id="521" parent="177" name="characters"/>
+    <table id="522" parent="177" name="editable_elements"/>
+    <table id="523" parent="177" name="hit_boxes"/>
+    <table id="524" parent="177" name="keys"/>
+    <table id="525" parent="177" name="levels"/>
+    <table id="526" parent="177" name="menu"/>
+    <table id="527" parent="177" name="menu_types"/>
+    <table id="528" parent="177" name="points"/>
+    <table id="529" parent="177" name="sqlite_master">
       <System>1</System>
     </table>
-    <table id="527" parent="177" name="sqlite_sequence">
+    <table id="530" parent="177" name="sqlite_sequence">
       <System>1</System>
     </table>
-    <table id="528" parent="177" name="styles"/>
-    <table id="529" parent="177" name="synonyms"/>
-    <table id="530" parent="177" name="system_params"/>
-    <column id="531" parent="518" name="_id">
+    <table id="531" parent="177" name="states"/>
+    <table id="532" parent="177" name="styles"/>
+    <table id="533" parent="177" name="synonyms"/>
+    <table id="534" parent="177" name="system_params"/>
+    <column id="535" parent="518" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="532" parent="518" name="name">
+    <column id="536" parent="518" name="name">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <index id="533" parent="518" name="sqlite_autoindex_action_types_1">
+    <index id="537" parent="518" name="sqlite_autoindex_action_types_1">
       <ColNames>_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="534" parent="518">
+    <key id="538" parent="518">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_action_types_1</UnderlyingIndexName>
     </key>
-    <key id="535" parent="518">
+    <key id="539" parent="518">
       <ColNames>_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_action_types_1</UnderlyingIndexName>
     </key>
-    <column id="536" parent="519" name="_id">
+    <column id="540" parent="519" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="537" parent="519" name="class">
+    <column id="541" parent="519" name="class">
       <DataType>TEXT|0s</DataType>
       <Position>2</Position>
     </column>
-    <column id="538" parent="519" name="object_id">
+    <column id="542" parent="519" name="object_id">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="539" parent="519" name="value">
+    <column id="543" parent="519" name="value">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <index id="540" parent="519" name="available_values__id_uindex">
+    <index id="544" parent="519" name="available_values__id_uindex">
       <ColNames>_id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="541" parent="519" name="available_values_pk">
+    <key id="545" parent="519" name="available_values_pk">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>available_values__id_uindex</UnderlyingIndexName>
     </key>
-    <column id="542" parent="520" name="_id">
+    <column id="546" parent="520" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="543" parent="520" name="_class">
+    <column id="547" parent="520" name="_class">
       <DataType>TEXT|0s</DataType>
       <DefaultExpression>&apos;com.shotinuniverse.fourthfloorgame.button&apos;</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="544" parent="520" name="_owner">
+    <column id="548" parent="520" name="_owner">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="545" parent="520" name="order">
+    <column id="549" parent="520" name="order">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="546" parent="520" name="points">
+    <column id="550" parent="520" name="points">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="547" parent="520" name="resource">
+    <column id="551" parent="520" name="resource">
       <DataType>TEXT|0s</DataType>
       <Position>6</Position>
     </column>
-    <column id="548" parent="520" name="action">
+    <column id="552" parent="520" name="action">
       <DataType>TEXT|0s</DataType>
       <Position>7</Position>
     </column>
-    <column id="549" parent="520" name="image">
+    <column id="553" parent="520" name="image">
       <DataType>TEXT|0s</DataType>
       <Position>8</Position>
     </column>
-    <column id="550" parent="520" name="style">
+    <column id="554" parent="520" name="style">
       <DataType>INTEGER|0s</DataType>
       <Position>9</Position>
     </column>
-    <index id="551" parent="520" name="sqlite_autoindex_buttons_1">
+    <index id="555" parent="520" name="sqlite_autoindex_buttons_1">
       <ColNames>_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="552" parent="520">
+    <key id="556" parent="520">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_buttons_1</UnderlyingIndexName>
     </key>
-    <key id="553" parent="520">
+    <key id="557" parent="520">
       <ColNames>_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_buttons_1</UnderlyingIndexName>
     </key>
-    <column id="554" parent="521" name="_id">
+    <column id="558" parent="521" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="555" parent="521" name="_class">
+    <column id="559" parent="521" name="_class">
+      <DataType>TEXT|0s</DataType>
+      <DefaultExpression>&apos;com.shotinuniverse.fourthfloorgame.character&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="560" parent="521" name="name">
+      <DataType>TEXT|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="561" parent="521" name="state">
+      <DataType>INTEGER|0s</DataType>
+      <Position>4</Position>
+    </column>
+    <column id="562" parent="521" name="type_class">
+      <DataType>INTEGER|0s</DataType>
+      <Position>5</Position>
+    </column>
+    <column id="563" parent="521" name="attributes">
+      <DataType>INTEGER|0s</DataType>
+      <Position>6</Position>
+    </column>
+    <index id="564" parent="521" name="characters__id_uindex">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="565" parent="521" name="characters_pk">
+      <ColNames>_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>characters__id_uindex</UnderlyingIndexName>
+    </key>
+    <column id="566" parent="522" name="_id">
+      <AutoIncrement>1</AutoIncrement>
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="567" parent="522" name="_class">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="556" parent="521" name="_owner">
+    <column id="568" parent="522" name="_owner">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="557" parent="521" name="order">
+    <column id="569" parent="522" name="order">
       <DataType>INTEGER|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="558" parent="521" name="points">
+    <column id="570" parent="522" name="points">
       <DataType>INTEGER|0s</DataType>
       <Position>5</Position>
     </column>
-    <column id="559" parent="521" name="style">
+    <column id="571" parent="522" name="style">
       <DataType>INTEGER|0s</DataType>
       <Position>6</Position>
     </column>
-    <column id="560" parent="521" name="table_data">
+    <column id="572" parent="522" name="table_data">
       <DataType>TEXT|0s</DataType>
       <Position>7</Position>
     </column>
-    <column id="561" parent="521" name="column_data">
+    <column id="573" parent="522" name="column_data">
       <DataType>TEXT|0s</DataType>
       <Position>8</Position>
     </column>
-    <column id="562" parent="521" name="static_id">
+    <column id="574" parent="522" name="static_id">
       <DataType>INTEGER|0s</DataType>
       <Position>9</Position>
     </column>
-    <column id="563" parent="521" name="editable">
+    <column id="575" parent="522" name="editable">
       <DataType>INTEGER|0s</DataType>
       <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>10</Position>
     </column>
-    <column id="564" parent="521" name="havePresentation">
+    <column id="576" parent="522" name="havePresentation">
       <DataType>INTEGER|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
       <Position>11</Position>
     </column>
-    <index id="565" parent="521" name="editableElements__id_uindex">
+    <index id="577" parent="522" name="editableElements__id_uindex">
       <ColNames>_id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="566" parent="521" name="editableElements_pk">
+    <key id="578" parent="522" name="editableElements_pk">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>editableElements__id_uindex</UnderlyingIndexName>
     </key>
-    <column id="567" parent="522" name="_id">
+    <column id="579" parent="523" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="568" parent="522" name="_class">
+    <column id="580" parent="523" name="class">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="569" parent="522" name="action">
+    <column id="581" parent="523" name="relativeX">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="570" parent="522" name="value">
-      <DataType>TEXT|0s</DataType>
+    <column id="582" parent="523" name="relativeY">
+      <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="571" parent="522" name="presentation">
-      <DataType>TEXT|0s</DataType>
+    <column id="583" parent="523" name="relativeWidth">
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <index id="572" parent="522" name="sqlite_autoindex_keys_1">
+    <column id="584" parent="523" name="relativeHeight">
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <column id="585" parent="523" name="object_id">
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <column id="586" parent="523" name="name">
+      <DataType>TEXT|0s</DataType>
+      <Position>8</Position>
+    </column>
+    <index id="587" parent="523" name="hit_boxes__id_uindex">
       <ColNames>_id</ColNames>
-      <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="573" parent="522">
+    <key id="588" parent="523" name="hit_boxes_pk">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
-      <UnderlyingIndexName>sqlite_autoindex_keys_1</UnderlyingIndexName>
+      <UnderlyingIndexName>hit_boxes__id_uindex</UnderlyingIndexName>
     </key>
-    <key id="574" parent="522">
-      <ColNames>_id</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_keys_1</UnderlyingIndexName>
-    </key>
-    <column id="575" parent="523" name="_id">
+    <column id="589" parent="524" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="576" parent="523" name="_class">
+    <column id="590" parent="524" name="_class">
+      <DataType>TEXT|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="591" parent="524" name="action">
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="592" parent="524" name="value">
+      <DataType>TEXT|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="593" parent="524" name="presentation">
+      <DataType>TEXT|0s</DataType>
+      <Position>5</Position>
+    </column>
+    <index id="594" parent="524" name="sqlite_autoindex_keys_1">
+      <ColNames>_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <key id="595" parent="524">
+      <ColNames>_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_keys_1</UnderlyingIndexName>
+    </key>
+    <key id="596" parent="524">
+      <ColNames>_id</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_keys_1</UnderlyingIndexName>
+    </key>
+    <column id="597" parent="525" name="_id">
+      <AutoIncrement>1</AutoIncrement>
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="598" parent="525" name="_class">
+      <DataType>TEXT|0s</DataType>
+      <DefaultExpression>&apos;com.shotinuniverse.fourthfloorgame.level&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="599" parent="525" name="name">
+      <DataType>TEXT|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="600" parent="525" name="number">
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="601" parent="525" name="char_position">
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <index id="602" parent="525" name="levels__id_uindex">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="603" parent="525" name="levels_pk">
+      <ColNames>_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>levels__id_uindex</UnderlyingIndexName>
+    </key>
+    <column id="604" parent="526" name="_id">
+      <AutoIncrement>1</AutoIncrement>
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="605" parent="526" name="_class">
       <DataType>TEXT|0s</DataType>
       <DefaultExpression>&apos;com.shotinuniverse.fourthfloorgame.menu&apos;</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="577" parent="523" name="name">
+    <column id="606" parent="526" name="name">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="578" parent="523" name="type">
+    <column id="607" parent="526" name="type">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="579" parent="523" name="resolution">
+    <column id="608" parent="526" name="resolution">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="580" parent="523" name="image">
+    <column id="609" parent="526" name="image">
       <DataType>TEXT|0s</DataType>
       <Position>6</Position>
     </column>
-    <index id="581" parent="523" name="sqlite_autoindex_menu_1">
+    <index id="610" parent="526" name="sqlite_autoindex_menu_1">
       <ColNames>_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="582" parent="523">
+    <key id="611" parent="526">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_menu_1</UnderlyingIndexName>
     </key>
-    <key id="583" parent="523">
+    <key id="612" parent="526">
       <ColNames>_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_menu_1</UnderlyingIndexName>
     </key>
-    <column id="584" parent="524" name="_id">
+    <column id="613" parent="527" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="585" parent="524" name="name">
+    <column id="614" parent="527" name="name">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <index id="586" parent="524" name="sqlite_autoindex_menu_types_1">
+    <index id="615" parent="527" name="sqlite_autoindex_menu_types_1">
       <ColNames>_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <index id="587" parent="524" name="sqlite_autoindex_menu_types_2">
+    <index id="616" parent="527" name="sqlite_autoindex_menu_types_2">
       <ColNames>name</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="588" parent="524">
+    <key id="617" parent="527">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_menu_types_1</UnderlyingIndexName>
     </key>
-    <key id="589" parent="524">
+    <key id="618" parent="527">
       <ColNames>_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_menu_types_1</UnderlyingIndexName>
     </key>
-    <key id="590" parent="524">
+    <key id="619" parent="527">
       <ColNames>name</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_menu_types_2</UnderlyingIndexName>
     </key>
-    <column id="591" parent="525" name="_id">
+    <column id="620" parent="528" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="592" parent="525" name="_class">
+    <column id="621" parent="528" name="_class">
       <DataType>TEXT|0s</DataType>
       <DefaultExpression>&apos;com.shotinuniverse.fouthfloorgame.points&apos;</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="593" parent="525" name="pointX">
+    <column id="622" parent="528" name="pointX">
       <DataType>INTEGER|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="594" parent="525" name="pointY">
+    <column id="623" parent="528" name="pointY">
       <DataType>INTEGER|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="595" parent="525" name="width">
+    <column id="624" parent="528" name="width">
       <DataType>INTEGER|0s</DataType>
       <Position>5</Position>
     </column>
-    <column id="596" parent="525" name="height">
+    <column id="625" parent="528" name="height">
       <DataType>INTEGER|0s</DataType>
       <Position>6</Position>
     </column>
-    <index id="597" parent="525" name="sqlite_autoindex_points_1">
+    <column id="626" parent="528" name="type">
+      <DataType>TEXT|0s</DataType>
+      <DefaultExpression>&apos;form element&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <index id="627" parent="528" name="sqlite_autoindex_points_1">
       <ColNames>_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="598" parent="525">
+    <key id="628" parent="528">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_points_1</UnderlyingIndexName>
     </key>
-    <key id="599" parent="525">
+    <key id="629" parent="528">
       <ColNames>_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_points_1</UnderlyingIndexName>
     </key>
-    <column id="600" parent="526" name="type">
+    <column id="630" parent="529" name="type">
       <DataType>TEXT|0s</DataType>
       <Position>1</Position>
     </column>
-    <column id="601" parent="526" name="name">
+    <column id="631" parent="529" name="name">
       <DataType>TEXT|0s</DataType>
       <Position>2</Position>
     </column>
-    <column id="602" parent="526" name="tbl_name">
+    <column id="632" parent="529" name="tbl_name">
       <DataType>TEXT|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="603" parent="526" name="rootpage">
+    <column id="633" parent="529" name="rootpage">
       <DataType>INT|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="604" parent="526" name="sql">
+    <column id="634" parent="529" name="sql">
       <DataType>TEXT|0s</DataType>
       <Position>5</Position>
     </column>
-    <column id="605" parent="527" name="name">
+    <column id="635" parent="530" name="name">
       <Position>1</Position>
     </column>
-    <column id="606" parent="527" name="seq">
+    <column id="636" parent="530" name="seq">
       <Position>2</Position>
     </column>
-    <column id="607" parent="528" name="_id">
+    <column id="637" parent="531" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="608" parent="528" name="_class">
+    <column id="638" parent="531" name="_class">
+      <DataType>TEXT|0s</DataType>
+      <DefaultExpression>&apos;com.shotinuniverse.fourthfloorgame.state&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="639" parent="531" name="level">
+      <DataType>INTEGER|0s</DataType>
+      <Position>3</Position>
+    </column>
+    <index id="640" parent="531" name="states__id_uindex">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="641" parent="531" name="states_pk">
+      <ColNames>_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>states__id_uindex</UnderlyingIndexName>
+    </key>
+    <column id="642" parent="532" name="_id">
+      <AutoIncrement>1</AutoIncrement>
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="643" parent="532" name="_class">
       <DataType>TEXT|0s</DataType>
       <DefaultExpression>&apos;com.shotinuniverse.fourthfloorgame.style&apos;</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="609" parent="528" name="style">
+    <column id="644" parent="532" name="style">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="610" parent="528" name="description">
+    <column id="645" parent="532" name="description">
       <DataType>TEXT|0s</DataType>
       <Position>4</Position>
     </column>
-    <index id="611" parent="528" name="styles__id_uindex">
+    <index id="646" parent="532" name="styles__id_uindex">
       <ColNames>_id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="612" parent="528" name="styles_pk">
+    <key id="647" parent="532" name="styles_pk">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>styles__id_uindex</UnderlyingIndexName>
     </key>
-    <column id="613" parent="529" name="_id">
+    <column id="648" parent="533" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="614" parent="529" name="object_id">
+    <column id="649" parent="533" name="object_id">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="615" parent="529" name="class">
+    <column id="650" parent="533" name="class">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="616" parent="529" name="language_code">
+    <column id="651" parent="533" name="language_code">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="617" parent="529" name="synonym">
+    <column id="652" parent="533" name="synonym">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <index id="618" parent="529" name="sqlite_autoindex_synonyms_1">
+    <index id="653" parent="533" name="sqlite_autoindex_synonyms_1">
       <ColNames>_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="619" parent="529">
+    <key id="654" parent="533">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_synonyms_1</UnderlyingIndexName>
     </key>
-    <key id="620" parent="529">
+    <key id="655" parent="533">
       <ColNames>_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_synonyms_1</UnderlyingIndexName>
     </key>
-    <column id="621" parent="530" name="_id">
+    <column id="656" parent="534" name="_id">
       <AutoIncrement>1</AutoIncrement>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="622" parent="530" name="_class">
+    <column id="657" parent="534" name="_class">
       <DataType>TEXT|0s</DataType>
       <DefaultExpression>&apos;com.shotinuniverse.fourthfloorgame.systemparameter&apos;</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="623" parent="530" name="name">
+    <column id="658" parent="534" name="name">
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="624" parent="530" name="value">
+    <column id="659" parent="534" name="value">
       <DataType>TEXT|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="625" parent="530" name="user_visible">
+    <column id="660" parent="534" name="user_visible">
       <DataType>INTEGER|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <index id="626" parent="530" name="system__id_uindex">
+    <index id="661" parent="534" name="system__id_uindex">
       <ColNames>_id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="627" parent="530" name="system_name_uindex">
+    <index id="662" parent="534" name="system_name_uindex">
       <ColNames>name</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="628" parent="530" name="system_pk">
+    <key id="663" parent="534" name="system_pk">
       <ColNames>_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>system__id_uindex</UnderlyingIndexName>
