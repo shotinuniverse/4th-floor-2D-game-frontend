@@ -10,6 +10,7 @@ public class HitBoxEntity extends AnyElement{
     private int relativeY;
     private int relativeWidth;
     private int relativeHeight;
+    private String type;
 
     @Override
     public int getId() {
@@ -75,5 +76,13 @@ public class HitBoxEntity extends AnyElement{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -32,6 +32,7 @@ public class HitBoxRepository {
             entity.setRelativeY((int) map.get("relativeY"));
             entity.setRelativeWidth((int) map.get("relativeWidth"));
             entity.setRelativeHeight((int) map.get("relativeHeight"));
+            entity.setType((String) map.get("type"));
 
             arrayList.add(entity);
         }

@@ -4,22 +4,26 @@ import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.Character;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.LevelBuilder;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.LevelPlatform;
+import com.shotinuniverse.fourthfloorgamefrontend.menu.Main;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class Game extends Application {
 
+    private Stage primaryStage;
     private Pane root;
     private int levelNumber;
     Character character;
     ArrayList<LevelPlatform> platformArrayList;
     static int framesPerSecond = 60;
     public static int currentFrame;
+    public static boolean runnable;
 
     public Game(int levelNumber) {
         super();
@@ -31,9 +35,12 @@ public class Game extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        this.primaryStage = primaryStage;
+        this.runnable = true;
+
         Map<String, Object> map = LevelBuilder.createLevel(levelNumber, root);
         character = (Character) map.get("character");
-        platformArrayList = (ArrayList<LevelPlatform>) map.get("platfroms");
+        platformArrayList = (ArrayList<LevelPlatform>) map.get("platforms");
 
         SessionManager.scene.setOnKeyPressed(character);
         SessionManager.scene.setOnKeyReleased(character);
@@ -51,7 +58,7 @@ public class Game extends Application {
         @Override
         public void run() {
             try {
-                while (true) {
+                while (runnable) {
                     Thread.sleep(1000 / framesPerSecond);
                     Platform.runLater(new Runnable() {
                         @Override
@@ -65,7 +72,16 @@ public class Game extends Application {
                     });
                 }
             } catch (InterruptedException ex) {
-                System.out.println("Interrupted");
+                Thread.currentThread().interrupt();
+            }
+
+            Main main = new Main();
+            try {
+                main.start(primaryStage);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
 

@@ -1,9 +1,14 @@
 package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
+import com.shotinuniverse.fourthfloorgamefrontend.entities.HitBoxEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.LevelEntity;
+import com.shotinuniverse.fourthfloorgamefrontend.entities.PlatformEntity;
+import com.shotinuniverse.fourthfloorgamefrontend.entities.Points;
+import com.shotinuniverse.fourthfloorgamefrontend.repositories.HitBoxRepository;
 import com.shotinuniverse.fourthfloorgamefrontend.repositories.LevelRepository;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.sql.SQLException;
@@ -26,7 +31,7 @@ public final class LevelBuilder {
         Character character = createChar(levelEntity, root);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("platfroms", platformArrayList);
+        map.put("platforms", platformArrayList);
         map.put("character", character);
 
         return map;
@@ -35,7 +40,7 @@ public final class LevelBuilder {
     private static ArrayList<LevelPlatform> createPlatforms(LevelEntity levelEntity, Pane root) {
         ArrayList<LevelPlatform> platformArrayList = new ArrayList<LevelPlatform>();
 
-        List<Rectangle> hitBoxes = LevelPlatform.getHitBoxesRectangles(levelEntity);
+        List<Rectangle> hitBoxes = getPlatformsHitBoxesRectangles(levelEntity);
         for (Rectangle hitBox: hitBoxes){
             root.getChildren().add(hitBox);
 
@@ -50,7 +55,7 @@ public final class LevelBuilder {
 
         List<Rectangle> hitBoxes = null;
         try {
-            hitBoxes = Character.getHitBoxesRectangles(levelEntity);
+            hitBoxes = getCharacterHitBoxesRectangles(levelEntity);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -59,6 +64,69 @@ public final class LevelBuilder {
             root.getChildren().add(hitBox);
 
         return new Character(hitBoxes);
+    }
+
+    public static List<Rectangle> getPlatformsHitBoxesRectangles(LevelEntity levelEntity) {
+
+        List<Rectangle> rectangleList = new ArrayList<>();
+
+        ArrayList<PlatformEntity> platformEntities = levelEntity.getPlatformEntities();
+        for (PlatformEntity entity: platformEntities) {
+            Rectangle rectangle = new Rectangle(entity.getPointX(),
+                    entity.getPointY(), entity.getWidth(), entity.getHeight());
+
+            rectangle.setFill(Color.DARKGREEN);
+
+            rectangleList.add(rectangle);
+        }
+
+        return rectangleList;
+    }
+
+    public static List<Rectangle> getCharacterHitBoxesRectangles(LevelEntity levelEntity) throws SQLException {
+        List<Rectangle> rectangleList = new ArrayList<>();
+
+        Points points = levelEntity.getCharPosition();
+        int beginX = points.getPointX();
+        int beginY = points.getPointY();
+
+        ArrayList<HitBoxEntity> hitBoxEntities = HitBoxRepository.getHitBoxes("character", 1);
+
+        for (HitBoxEntity hitBox: hitBoxEntities) {
+            int relativeWidth = hitBox.getRelativeWidth();
+            int relativeHeight = hitBox.getRelativeHeight();
+            Rectangle rectangle = new Rectangle(
+                    beginX + hitBox.getRelativeX(),
+                    beginY + hitBox.getRelativeY(),
+                    relativeWidth,
+                    relativeHeight);
+
+            String rectangleId = String.valueOf(hitBox.getId());
+            rectangle.setId(rectangleId);
+
+            //typesHitBoxes.put(hitBox.getType(), rectangleId);
+
+            Color color = null;
+            switch (hitBox.getName()) {
+                case "head" -> {
+                    color = Color.RED;
+                }
+                case "body" -> {
+                    color = Color.BLUE;
+                }
+                case "foots" -> {
+                    color = Color.BLACK;
+                }
+                case "left hand", "right hand" -> {
+                    color = Color.YELLOW;
+                }
+            }
+
+            rectangle.setFill(color);
+            rectangleList.add(rectangle);
+        }
+
+        return rectangleList;
     }
 
 }

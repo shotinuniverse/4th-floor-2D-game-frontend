@@ -2,56 +2,27 @@ package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
 import com.shotinuniverse.fourthfloorgamefrontend.Game;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
-import com.shotinuniverse.fourthfloorgamefrontend.entities.HitBoxEntity;
-import com.shotinuniverse.fourthfloorgamefrontend.entities.LevelEntity;
-import com.shotinuniverse.fourthfloorgamefrontend.entities.Points;
-import com.shotinuniverse.fourthfloorgamefrontend.repositories.HitBoxRepository;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.sql.SQLException;
 import java.util.*;
 
-public class Character implements EventHandler<KeyEvent> {
-
-    private List<Rectangle> hitBoxes;
-    private int speedX;
-    private int speedY;
-    public int countFramesJump = 30;
-    private int frameBeginJump = 0;
-    private int frameEndJump = 0;
-    private boolean onGround = false;
+public class Character extends GameDynamicObject implements EventHandler<KeyEvent> {
+    private final Set<KeyCode> KEY_UP = new HashSet<>();
+    private final Set<KeyCode> KEY_RIGHT = new HashSet<>();
+    private final Set<KeyCode> KEY_DOWN = new HashSet<>();
+    private final Set<KeyCode> KEY_LEFT = new HashSet<>();
+    public int limitFramesJump = 10;
+    Side sideJump;
     final private Set<KeyCode> activeKeys = new HashSet<>();
 
     public Character(List<Rectangle> rectangleList) {
-        this.hitBoxes = rectangleList;
-
-        setPhysic();
-    }
-
-    private void setPhysic() {
-        String query = String.format("""
-                select
-                    physic_properties.*
-                from
-                    physic_properties as physic_properties
-                where
-                    _id = 1
-                """);
-
-        try {
-            Object object = SqlQuery.getObjectFromTable(query);
-            Map<String, Object> map = (HashMap) object;
-            speedX = (int) map.get("speedX");
-            speedY = (int) map.get("speedY");
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        super(rectangleList, 1);
+        setControlKeys();
     }
 
     @Override
@@ -63,172 +34,155 @@ public class Character implements EventHandler<KeyEvent> {
         }
     }
 
-    public Set<KeyCode> getActiveKeys() {
-        return Collections.unmodifiableSet(activeKeys);
+    private void setControlKeys() {
+        String query = "select action_types.name as name, keys.value as value from keys as keys inner join action_types as action_types on keys.action = action_types._id";
+        try {
+            ArrayList<Object> arrayList = SqlQuery.getObjects(query);
+            for (Object object: arrayList) {
+                Map<String, Object> map = (HashMap) object;
+                if (map.get("name").equals("move forward"))
+                    KEY_RIGHT.add(KeyCode.getKeyCode((String) map.get("value")));
+                else if (map.get("name").equals("move back"))
+                    KEY_LEFT.add(KeyCode.getKeyCode((String) map.get("value")));
+                else if (map.get("name").equals("jump"))
+                    KEY_UP.add(KeyCode.getKeyCode((String) map.get("value")));
+                else if (map.get("name").equals("sneak"))
+                    KEY_DOWN.add(KeyCode.getKeyCode((String) map.get("value")));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void move() {
+        if (!onGround){
+            if (numberFrameEndJump != 0) {
+                endJump();
+            } else {
+                return;
+            }
+        }
+
         Set<KeyCode> keyCodes = getActiveKeys();
         if (keyCodes.size() == 0)
             return;
 
-        for (int i = 0; i < hitBoxes.size(); i++) {
+        int countHitBoxes = hitBoxes.size() - 1;
+        for (int i = 0; i <= countHitBoxes; i++) {
             Rectangle hitBox = hitBoxes.get(i);
             double xPos;
-            double yPos;
-            if (keyCodes.contains(KeyCode.RIGHT) && keyCodes.contains(KeyCode.UP)) {
-                if (!onGround && i == 0) {
-                    break;
-                }
-
-                onGround = false;
-                int currentFrame = Game.getCurrentFrame();
-                if(frameBeginJump == 0) {
-                    frameBeginJump = currentFrame;
-                    frameEndJump = currentFrame + countFramesJump;
-                }
-
-                yPos = hitBox.getY() - currentFrame * speedY;
-                xPos = hitBox.getX() + currentFrame * (speedX / 2);
-
-                hitBox.setX(xPos);
-                hitBox.setY(yPos);
-
-                frameBeginJump += 1;
-
-                if (frameBeginJump > frameEndJump) {
-                    frameBeginJump = 0;
-                    frameEndJump = 0;
-                }
+            if (haveMoveRight(keyCodes) && haveMoveUp(keyCodes)) {
+                sideJump = Side.RIGHT;
+                beginJump(hitBox);
+                if(i == countHitBoxes)
+                    onGround = false;
             }
-            else if (keyCodes.contains(KeyCode.LEFT) && keyCodes.contains(KeyCode.UP)) {
-                if (!onGround && i == 0) {
-                    break;
-                }
-
-                onGround = false;
-                int currentFrame = Game.getCurrentFrame();
-                if (frameBeginJump == 0) {
-                    frameBeginJump = currentFrame;
-                    frameEndJump = currentFrame + countFramesJump;
-                }
-
-                yPos = hitBox.getY() - currentFrame * speedY;
-                xPos = hitBox.getX() - currentFrame * (speedX / 2);
-
-                hitBox.setX(xPos);
-                hitBox.setY(yPos);
-
-                frameBeginJump += 1;
-
-                if (frameBeginJump > frameEndJump) {
-                    frameBeginJump = 0;
-                    frameEndJump = 0;
-                }
+            else if (haveMoveLeft(keyCodes) && haveMoveUp(keyCodes)) {
+                sideJump = Side.LEFT;
+                beginJump(hitBox);
+                if(i == countHitBoxes)
+                    onGround = false;
             }
-            else if (keyCodes.contains(KeyCode.RIGHT)) {
-                    xPos = hitBox.getX() + speedX;
-                    hitBox.setX(xPos);
-                }
-            else if (keyCodes.contains(KeyCode.LEFT)) {
+            else if (haveMoveUp(keyCodes)) {
+                sideJump = Side.TOP;
+                beginJump(hitBox);
+                if(i == countHitBoxes)
+                    onGround = false;
+            }
+            else if (haveMoveRight(keyCodes)) {
+                xPos = hitBox.getX() + speedX;
+                hitBox.setX(xPos);
+            }
+            else if (haveMoveLeft(keyCodes)) {
                 xPos = hitBox.getX() - speedX;
                 hitBox.setX(xPos);
             }
-            else if (keyCodes.contains(KeyCode.UP)) {
-                if (!onGround && i == 0) {
-                    break;
-                }
-
-                onGround = false;
-                int currentFrame = Game.getCurrentFrame();
-                if (frameBeginJump == 0) {
-                    frameBeginJump = currentFrame;
-                    frameEndJump = currentFrame + countFramesJump;
-                }
-
-                yPos = hitBox.getY() - currentFrame * speedY;
-
-
-                hitBox.setY(yPos);
-
-                frameBeginJump += 1;
-
-                if (frameBeginJump > frameEndJump) {
-                    frameBeginJump = 0;
-                    frameEndJump = 0;
-                }
-            }
         }
     }
 
-    public static List<Rectangle> getHitBoxesRectangles(LevelEntity levelEntity) throws SQLException {
-        List<Rectangle> rectangleList = new ArrayList<>();
-
-        Points points = levelEntity.getCharPosition();
-        int beginX = points.getPointX();
-        int beginY = points.getPointY();
-
-        ArrayList<HitBoxEntity> hitBoxEntities = HitBoxRepository.getHitBoxes("character", 1);
-
-        for (HitBoxEntity hitBox: hitBoxEntities) {
-            int relativeWidth = hitBox.getRelativeWidth();
-            int relativeHeight = hitBox.getRelativeHeight();
-            Rectangle rectangle = new Rectangle(
-                    beginX + hitBox.getRelativeX(),
-                    beginY + hitBox.getRelativeY(),
-                    relativeWidth,
-                    relativeHeight);
-
-            Color color = null;
-            switch (hitBox.getName()) {
-                case "head" -> {
-                    color = Color.RED;
-                }
-                case "body" -> {
-                    color = Color.BLUE;
-                }
-                case "foots" -> {
-                    color = Color.BLACK;
-                }
-                case "left hand", "right hand" -> {
-                    color = Color.YELLOW;
-                }
-            }
-
-            rectangle.setFill(color);
-            rectangleList.add(rectangle);
+    private boolean haveMoveRight(Set<KeyCode> keyCodes) {
+        boolean haveMove = false;
+        for (KeyCode keyRight: KEY_RIGHT) {
+            if (keyCodes.contains(keyRight))
+                haveMove = true;
         }
-
-        return rectangleList;
+        return haveMove;
     }
 
-    public void collisionHandler(ArrayList<LevelPlatform> platformArrayList) {
-        checkCollisionsWithPlatforms(platformArrayList);
-        setGravity();
+    private boolean haveMoveLeft(Set<KeyCode> keyCodes) {
+        boolean haveMove = false;
+        for (KeyCode keyLeft: KEY_LEFT) {
+            if (keyCodes.contains(keyLeft))
+                haveMove = true;
+        }
+        return haveMove;
     }
 
-    public void setGravity() {
-        if (onGround)
+    private boolean haveMoveUp(Set<KeyCode> keyCodes) {
+        boolean haveMove = false;
+        for (KeyCode keyUp: KEY_UP) {
+            if (keyCodes.contains(keyUp))
+                haveMove = true;
+        }
+        return haveMove;
+    }
+
+    public Set<KeyCode> getActiveKeys() {
+        return Collections.unmodifiableSet(activeKeys);
+    }
+
+    private void beginJump(Rectangle hitBox) {
+        if (!onGround) {
             return;
+        }
 
-        double yPos;
+        int currentFrame = Game.getCurrentFrame();
 
-        for (int i = 0; i < hitBoxes.size(); i++) {
-            Rectangle hitBox = hitBoxes.get(i);
-            yPos = hitBox.getY() + PhysicConst.characterGravity;
+        editCoordinatesInJump(hitBox);
+
+        if(numberFrameEndJump == 0){
+            numberFrameEndJump = currentFrame + limitFramesJump;
+        }
+    }
+
+    private void endJump() {
+        int currentFrame = Game.getCurrentFrame();
+
+        int valueForComparison = numberFrameEndJump > 60 ? numberFrameEndJump - 60 : numberFrameEndJump;
+        if (currentFrame > valueForComparison) {
+            numberFrameEndJump = 0;
+            return;
+        }
+
+        for (Rectangle hitBox: hitBoxes) {
+            editCoordinatesInJump(hitBox);
+        }
+    }
+
+    private void editCoordinatesInJump(Rectangle hitBox) {
+        double yPos = hitBox.getY() - speedY;
+        if(yPos < 0 || yPos > 1080) {
+            hitBox.setY(540);
+            numberFrameEndJump = 0;
+            return;
+        } else {
             hitBox.setY(yPos);
         }
-    }
 
-    public void checkCollisionsWithPlatforms(ArrayList<LevelPlatform> platformArrayList) {
-        Rectangle foot = hitBoxes.get(0); // foot
-
-        boolean collisionDetected = false;
-        for (LevelPlatform levelPlatform: platformArrayList) {
-            if (levelPlatform.getHitBox().getBoundsInParent().intersects(foot.getBoundsInParent()))
-                collisionDetected = true;
+        double xPos = 0;
+        double moveX = speedX * 1.7;
+        switch (sideJump) {
+            case RIGHT -> xPos = hitBox.getX() + moveX;
+            case LEFT -> xPos = hitBox.getX() - moveX;
+            case TOP -> xPos = hitBox.getX();
         }
 
-        onGround = collisionDetected;
+        if (xPos < 0 || xPos > 1920) {
+            hitBox.setX(40);
+            numberFrameEndJump = 0;
+            return;
+        } else {
+            hitBox.setX(xPos);
+        }
     }
 }
