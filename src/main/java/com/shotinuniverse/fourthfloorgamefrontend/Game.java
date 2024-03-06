@@ -1,15 +1,15 @@
 package com.shotinuniverse.fourthfloorgamefrontend;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
+import com.shotinuniverse.fourthfloorgamefrontend.engine.*;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.Character;
-import com.shotinuniverse.fourthfloorgamefrontend.engine.LevelBuilder;
-import com.shotinuniverse.fourthfloorgamefrontend.engine.LevelPlatform;
 import com.shotinuniverse.fourthfloorgamefrontend.menu.Main;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -21,6 +21,7 @@ public class Game extends Application {
     private int levelNumber;
     Character character;
     ArrayList<LevelPlatform> platformArrayList;
+    CharacterAnimation characterAnimation;
     static int framesPerSecond = 60;
     public static int currentFrame;
     public static boolean runnable;
@@ -41,6 +42,7 @@ public class Game extends Application {
         Map<String, Object> map = LevelBuilder.createLevel(levelNumber, root);
         character = (Character) map.get("character");
         platformArrayList = (ArrayList<LevelPlatform>) map.get("platforms");
+        characterAnimation = new CharacterAnimation(character);
 
         SessionManager.scene.setOnKeyPressed(character);
         SessionManager.scene.setOnKeyReleased(character);
@@ -65,8 +67,10 @@ public class Game extends Application {
                         public void run() {
                             countFrames();
 
+                            characterAnimation.animateCharacterRest();
                             character.move();
                             character.collisionHandler(platformArrayList);
+                            characterAnimation.rollbackCharacterAnimate();
                             SessionManager.scene.setRoot(root);
                         }
                     });

@@ -2,6 +2,8 @@ package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
 import com.shotinuniverse.fourthfloorgamefrontend.Game;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
+import com.shotinuniverse.fourthfloorgamefrontend.entities.AnimationEntity;
+import com.shotinuniverse.fourthfloorgamefrontend.repositories.AnimationRepository;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.input.KeyCode;
@@ -18,7 +20,7 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
     private final Set<KeyCode> KEY_LEFT = new HashSet<>();
     public int limitFramesJump = 10;
     Side sideJump;
-    final private Set<KeyCode> activeKeys = new HashSet<>();
+    private final Set<KeyCode> activeKeys = new HashSet<>();
 
     public Character(List<Rectangle> rectangleList) {
         super(rectangleList, 1);
@@ -41,13 +43,13 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
             for (Object object: arrayList) {
                 Map<String, Object> map = (HashMap) object;
                 if (map.get("name").equals("move forward"))
-                    KEY_RIGHT.add(KeyCode.getKeyCode((String) map.get("value")));
+                    KEY_RIGHT.add(KeyCode.valueOf((String) map.get("value")));
                 else if (map.get("name").equals("move back"))
-                    KEY_LEFT.add(KeyCode.getKeyCode((String) map.get("value")));
+                    KEY_LEFT.add(KeyCode.valueOf((String) map.get("value")));
                 else if (map.get("name").equals("jump"))
-                    KEY_UP.add(KeyCode.getKeyCode((String) map.get("value")));
+                    KEY_UP.add(KeyCode.valueOf((String) map.get("value")));
                 else if (map.get("name").equals("sneak"))
-                    KEY_DOWN.add(KeyCode.getKeyCode((String) map.get("value")));
+                    KEY_DOWN.add(KeyCode.valueOf((String) map.get("value")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -185,4 +187,5 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
             hitBox.setX(xPos);
         }
     }
+
 }
