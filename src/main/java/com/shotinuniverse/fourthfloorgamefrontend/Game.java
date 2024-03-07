@@ -68,9 +68,9 @@ public class Game extends Application {
                             countFrames();
 
                             characterAnimation.animateCharacterRest();
+                            characterAnimation.rollbackCharacterAnimate();
                             character.move();
                             character.collisionHandler(platformArrayList);
-                            characterAnimation.rollbackCharacterAnimate();
                             SessionManager.scene.setRoot(root);
                         }
                     });

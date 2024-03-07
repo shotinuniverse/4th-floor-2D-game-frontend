@@ -50,7 +50,7 @@ public class AnimationRepository {
                 where
                     hit_boxes.object_id = %d and animations.class = '%s'
                 order by
-                    animations.frame_number asc
+                    animations.object_id asc, animations.frame_number asc
                 """, ownerId, SessionManager.packageProject + ".hitbox");
     }
 }

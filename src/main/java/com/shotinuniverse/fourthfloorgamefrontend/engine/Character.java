@@ -2,8 +2,6 @@ package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
 import com.shotinuniverse.fourthfloorgamefrontend.Game;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
-import com.shotinuniverse.fourthfloorgamefrontend.entities.AnimationEntity;
-import com.shotinuniverse.fourthfloorgamefrontend.repositories.AnimationRepository;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.input.KeyCode;

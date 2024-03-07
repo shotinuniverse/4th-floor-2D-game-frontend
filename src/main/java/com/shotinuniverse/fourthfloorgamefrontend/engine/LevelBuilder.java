@@ -107,17 +107,17 @@ public final class LevelBuilder {
             //typesHitBoxes.put(hitBox.getType(), rectangleId);
 
             Color color = null;
-            switch (hitBox.getName()) {
+            switch (hitBox.getType()) {
                 case "head" -> {
                     color = Color.RED;
                 }
                 case "body" -> {
                     color = Color.BLUE;
                 }
-                case "foots" -> {
+                case "foot" -> {
                     color = Color.BLACK;
                 }
-                case "left hand", "right hand" -> {
+                case "hand" -> {
                     color = Color.YELLOW;
                 }
             }

@@ -5,17 +5,18 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class CharacterAnimation extends Animation{
 
     private Character character;
-    private List<Rectangle> primalHitBoxes;
+    private List<Rectangle> primalHitBoxes = new ArrayList<>();
 
     public CharacterAnimation (Character character) {
         this.character = character;
-        this.primalHitBoxes = character.hitBoxes;
+        //this.primalHitBoxes = character.hitBoxes;
         try {
             animations = AnimationRepository.getAnimationsForCharacter(1);
         } catch (SQLException e) {
@@ -29,13 +30,21 @@ public class CharacterAnimation extends Animation{
             return;
         }
 
+        if (counterFramesAnimationRest == 0) {
+            this.primalHitBoxes.clear();
+            for (Rectangle hitBox: character.hitBoxes){
+                Rectangle temp = new Rectangle(hitBox.getX(), hitBox.getY(), hitBox.getWidth(), hitBox.getHeight());
+                this.primalHitBoxes.add(temp);
+            }
+        }
+
         animateRest(character.hitBoxes);
     }
 
     public void rollbackCharacterAnimate() {
         Set<KeyCode> keyCodes = character.getActiveKeys();
-        if ((!character.onGround || keyCodes.size() != 0 || character.numberFrameEndJump != 0) && countFramesAnimationRest != 0) {
-            for (int objectId: objectIdForAnimationRest) {
+        if ((!character.onGround || keyCodes.size() != 0 || character.numberFrameEndJump != 0) && counterFramesAnimationRest != 0) {
+            for (int objectId: mapBeginFrameAnimations.keySet()) {
                 character.hitBoxes.set(objectId - 1, primalHitBoxes.get(objectId - 1));
             }
             rollbackAnimate();

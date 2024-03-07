@@ -2,66 +2,85 @@ package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
 import com.shotinuniverse.fourthfloorgamefrontend.Game;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.AnimationEntity;
-import com.shotinuniverse.fourthfloorgamefrontend.repositories.AnimationRepository;
-import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.*;
 
 public class Animation {
 
     public ArrayList<AnimationEntity> animations = new ArrayList<>();
-    public final Map<Integer, Integer> mapBeginFrameAnimations = new HashMap<>();
-    public int countFramesAnimationRest;
-    public final List<Integer> objectIdForAnimationRest = new ArrayList<>();
+    public Map<Integer, Map<Integer, Integer>> mapBeginFrameAnimations = new HashMap<>();
+    public int counterFramesAnimationRest;
+    //public int numberOfAnimationsRest;
 
     public void animateRest(List<Rectangle> hitBoxes) {
 
         int currentFrame = Game.getCurrentFrame();
 
-        if (mapBeginFrameAnimations.size() > 0 && !mapBeginFrameAnimations.containsKey(currentFrame))
-            return;
-
-        if (countFramesAnimationRest == 0) {
-            for (AnimationEntity animation : animations) {
-                if (animation.getInMove() == 0) {
-                    mapBeginFrameAnimations.put(currentFrame + (animation.getFrameNumber() - 1), animation.getId());
-                    if (!objectIdForAnimationRest.contains(animation.getOwnerId()))
-                        objectIdForAnimationRest.add(animation.getOwnerId());
-                }
-            }
-        } else {
-            if (countFramesAnimationRest == mapBeginFrameAnimations.size()) {
-                countFramesAnimationRest = 0;
-                mapBeginFrameAnimations.clear();
-                objectIdForAnimationRest.clear();
-            }
+        int numberOfAnimationsRest = mapBeginFrameAnimations.size() == 0 ? 0 :
+                mapBeginFrameAnimations.get(mapBeginFrameAnimations.keySet().toArray()[0]).size();
+        if (counterFramesAnimationRest == numberOfAnimationsRest) {
+            counterFramesAnimationRest = 0;
+            //numberOfAnimationsRest = 0;
+            mapBeginFrameAnimations.clear();
+           // objectIdForAnimationRest.clear();
         }
 
-        for (int objectId: objectIdForAnimationRest) {
-            Rectangle rectangle = hitBoxes.get(objectId - 1);
-            int animationId = mapBeginFrameAnimations.get(currentFrame);
+//        if (mapBeginFrameAnimations.size() > 0 && !mapBeginFrameAnimations.containsKey(currentFrame))
+//            return;
+
+        if (counterFramesAnimationRest == 0) {
             for (AnimationEntity animation : animations) {
-                if (animation.getId() == animationId) {
-                    if (animation.getAction().equals("right shift")) {
-                        double xPos = rectangle.getX() + animation.getValue();
-                        rectangle.setX(xPos);
-                    } else if (animation.getAction().equals("left shift")) {
-                        double xPos = rectangle.getX() - animation.getValue();
-                        rectangle.setX(xPos);
+                if (animation.getInMove() == 0) {
+                    int index = animation.getOwnerId();
+                    int frame = currentFrame + (animation.getFrameNumber() - 1);
+                    frame = frame > 60 ? frame - 60 : frame;
+                    if (mapBeginFrameAnimations.containsKey(index)){
+                        mapBeginFrameAnimations.get(index).put(frame, animation.getId());
+                    } else {
+                        Map<Integer, Integer> map = new HashMap<>();
+                        map.put(frame, animation.getId());
+                        mapBeginFrameAnimations.put(index, map);
                     }
                 }
             }
         }
 
-        countFramesAnimationRest += 1;
+        boolean madeAnimate = false;
+        for (Integer objectId: mapBeginFrameAnimations.keySet()) {
+            Rectangle rectangle = hitBoxes.get(objectId - 1);
+            Map<Integer, Integer> frameAnimation = mapBeginFrameAnimations.get(objectId);
+            for (Integer frameNumber: frameAnimation.keySet()) {
+                if (frameNumber != currentFrame)
+                    continue;
+                int animationId = frameAnimation.get(frameNumber);
+                for (AnimationEntity animation : animations) {
+                    if (animation.getId() == animationId) {
+                        double xPos = 0;
+                        double yPos = 0;
+                        if (animation.getAction().equals("right shift")) {
+                            xPos = rectangle.getX() + animation.getValue();
+                            yPos = rectangle.getY();
+                        } else if (animation.getAction().equals("left shift")) {
+                            xPos = rectangle.getX() - animation.getValue();
+                            yPos = rectangle.getY();
+                        }
+
+                        rectangle.setX(xPos);
+                        rectangle.setY(yPos);
+                        madeAnimate = true;
+                    }
+                }
+            }
+        }
+
+        if (madeAnimate)
+            counterFramesAnimationRest += 1;
     }
 
     public void rollbackAnimate() {
-        countFramesAnimationRest = 0;
+        counterFramesAnimationRest = 0;
         mapBeginFrameAnimations.clear();
-        objectIdForAnimationRest.clear();
+        //objectIdForAnimationRest.clear();
     }
 }
