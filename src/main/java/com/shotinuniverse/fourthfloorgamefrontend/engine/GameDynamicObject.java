@@ -41,8 +41,8 @@ public class GameDynamicObject implements GameDynamicObjectInt {
                 from
                     physic_properties as physic_properties
                 where
-                    _id = 1
-                """);
+                    _id = %d
+                """, objectId);
 
         Object object = SqlQuery.getObjectFromTable(query);
         Map<String, Object> map = (HashMap) object;

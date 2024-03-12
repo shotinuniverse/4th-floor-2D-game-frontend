@@ -149,7 +149,7 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
         int currentFrame = Game.getCurrentFrame();
 
         int valueForComparison;
-        if (Game.framesPerSecond - limitFramesJump <= currentFrame && currentFrame <= Game.framesPerSecond) {
+        if (Game.framesPerSecond - limitFramesJump <= currentFrame && currentFrame <= Game.framesPerSecond && numberFrameEndJump > 60) {
             valueForComparison = Game.framesPerSecond;
         } else {
             valueForComparison = numberFrameEndJump > Game.framesPerSecond ? numberFrameEndJump - Game.framesPerSecond : numberFrameEndJump;

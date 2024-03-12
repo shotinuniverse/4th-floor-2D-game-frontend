@@ -10,26 +10,26 @@ import java.util.Map;
 
 public final class PhysicConst {
 
-    public static int characterGravity;
-    public static int mobGravity;
+    public static double characterGravity;
+    public static double mobGravity;
 
     public PhysicConst() throws SQLException {
-        ArrayList<Object> consts = SqlQuery.getObjects(getQueryForConsts());
-        for(Object constElement: consts) {
+        ArrayList<Object> constants = SqlQuery.getObjects(getQueryForConstants());
+        for(Object constElement: constants) {
             Map<String, Object> map = (HashMap) constElement;
             if (map.get("class").equals(SessionManager.packageProject + ".character")) {
                 if (map.get("name").equals("gravity")) {
-                    characterGravity = (Integer) map.get("value");
+                    characterGravity = (float) map.get("value");
                 }
             } else if(map.get("class").equals(SessionManager.packageProject + ".mob")) {
                 if (map.get("name").equals("gravity")) {
-                    mobGravity = (Integer) map.get("value");
+                    mobGravity = (float) map.get("value");
                 }
             }
         }
     }
 
-    private static String getQueryForConsts() {
+    private static String getQueryForConstants() {
         return String.format("""
                 select
                     physic_const.*

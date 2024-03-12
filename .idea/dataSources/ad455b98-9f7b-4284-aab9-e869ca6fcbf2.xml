@@ -1974,7 +1974,7 @@
       <Position>3</Position>
     </column>
     <column id="639" parent="529" name="value">
-      <DataType>INTEGER|0s</DataType>
+      <DataType>REAL|0s</DataType>
       <Position>4</Position>
     </column>
     <index id="640" parent="529" name="physic_const__id_uindex">
