@@ -45,7 +45,10 @@ public class CharacterAnimation extends Animation{
         Set<KeyCode> keyCodes = character.getActiveKeys();
         if ((!character.onGround || keyCodes.size() != 0 || character.numberFrameEndJump != 0) && counterFramesAnimationRest != 0) {
             for (int objectId: mapBeginFrameAnimations.keySet()) {
-                character.hitBoxes.set(objectId - 1, primalHitBoxes.get(objectId - 1));
+                Rectangle base = character.hitBoxes.get(objectId - 1);
+                Rectangle primal = primalHitBoxes.get(objectId - 1);
+                base.setX(primal.getX());
+                base.setY(primal.getY());
             }
             rollbackAnimate();
         }
