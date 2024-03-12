@@ -78,7 +78,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
     }
 
     @Override
-    public double calculateGravity(int speedX, int speedY) {
+    public double calculateGravity(double beginX, double beginY, int speedX, int speedY) {
         return 0;
     }
 

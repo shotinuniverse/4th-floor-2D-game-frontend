@@ -6,7 +6,6 @@ import com.shotinuniverse.fourthfloorgamefrontend.entities.PlatformEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.Points;
 import com.shotinuniverse.fourthfloorgamefrontend.repositories.HitBoxRepository;
 import com.shotinuniverse.fourthfloorgamefrontend.repositories.LevelRepository;
-import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
