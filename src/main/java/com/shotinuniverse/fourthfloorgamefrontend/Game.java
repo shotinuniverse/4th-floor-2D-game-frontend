@@ -22,7 +22,7 @@ public class Game extends Application {
     Character character;
     ArrayList<LevelPlatform> platformArrayList;
     CharacterAnimation characterAnimation;
-    static int framesPerSecond = 60;
+    public static int framesPerSecond = 60;
     public static int currentFrame;
     public static boolean runnable;
 

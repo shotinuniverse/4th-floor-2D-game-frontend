@@ -94,7 +94,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
         } else {
             Rectangle head = hitBoxes.get(4);
             gravity = checkHorizontalCollisionOnSegment(head, platformArrayList, Side.TOP);
-            if (gravity != PhysicConst.characterGravity)
+            if (gravity > 0 && gravity != PhysicConst.characterGravity)
                 collisionDetected = true;
         }
 
@@ -114,7 +114,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
             gravity = PhysicConst.characterGravity;
             y = bounds.getMaxY();
         } else {
-            gravity = 0;
+            gravity = -1;
             y = bounds.getMinY();
         }
 

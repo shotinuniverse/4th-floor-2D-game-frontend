@@ -11,7 +11,6 @@ public class Animation {
     public ArrayList<AnimationEntity> animations = new ArrayList<>();
     public Map<Integer, Map<Integer, Integer>> mapBeginFrameAnimations = new HashMap<>();
     public int counterFramesAnimationRest;
-    //public int numberOfAnimationsRest;
 
     public void animateRest(List<Rectangle> hitBoxes) {
 
@@ -21,20 +20,15 @@ public class Animation {
                 mapBeginFrameAnimations.get(mapBeginFrameAnimations.keySet().toArray()[0]).size();
         if (counterFramesAnimationRest == numberOfAnimationsRest) {
             counterFramesAnimationRest = 0;
-            //numberOfAnimationsRest = 0;
             mapBeginFrameAnimations.clear();
-           // objectIdForAnimationRest.clear();
         }
-
-//        if (mapBeginFrameAnimations.size() > 0 && !mapBeginFrameAnimations.containsKey(currentFrame))
-//            return;
 
         if (counterFramesAnimationRest == 0) {
             for (AnimationEntity animation : animations) {
                 if (animation.getInMove() == 0) {
                     int index = animation.getOwnerId();
                     int frame = currentFrame + (animation.getFrameNumber() - 1);
-                    frame = frame > 60 ? frame - 60 : frame;
+                    frame = frame > Game.framesPerSecond ? frame - Game.framesPerSecond : frame;
                     if (mapBeginFrameAnimations.containsKey(index)){
                         mapBeginFrameAnimations.get(index).put(frame, animation.getId());
                     } else {
@@ -81,6 +75,5 @@ public class Animation {
     public void rollbackAnimate() {
         counterFramesAnimationRest = 0;
         mapBeginFrameAnimations.clear();
-        //objectIdForAnimationRest.clear();
     }
 }
