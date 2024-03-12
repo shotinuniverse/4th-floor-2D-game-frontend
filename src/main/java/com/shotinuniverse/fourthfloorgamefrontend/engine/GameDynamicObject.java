@@ -78,6 +78,11 @@ public class GameDynamicObject implements GameDynamicObjectInt {
     }
 
     @Override
+    public double calculateGravity(int speedX, int speedY) {
+        return 0;
+    }
+
+    @Override
     public double checkCollisionsWithPlatforms(ArrayList<LevelPlatform> platformArrayList) {
         boolean collisionDetected = false;
         double gravity;
