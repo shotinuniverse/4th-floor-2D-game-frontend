@@ -2,6 +2,7 @@ package com.shotinuniverse.fourthfloorgamefrontend;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.Character;
+import com.shotinuniverse.fourthfloorgamefrontend.engine.PhysicConst;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.ComboboxEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.SliderEntity;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.TextFieldEntity;
@@ -56,6 +57,12 @@ public class ElementAction {
                             }
                         }
                         case "start" -> {
+                            try {
+                                PhysicConst physicConst = new PhysicConst();
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+
                             Game game = new Game(1);
                             try {
                                 game.start(stage);
@@ -157,9 +164,10 @@ public class ElementAction {
 
     private void updateKeys(ArrayList<Map<String, Object>> outputData) throws SQLException {
         for (Map<String, Object> map: outputData) {
-            String query = String.format("UPDATE %s SET presentation = '%s', %s = '%s' WHERE _id = %d",
-                    map.get("tableName"), map.get("value"),
-                    map.get("columnName"), (int) ((String) map.get("value")).charAt(0),
+            String s = ((String) map.get("value")).toUpperCase();
+            String query = String.format("UPDATE %s SET presentation = '%s, %s', %s = '%s' WHERE _id = %d",
+                    map.get("tableName"), map.get("value"), s,
+                    map.get("columnName"), s,
                     (int) map.get("_id"));
 
             SqlQuery.updateObject(query);

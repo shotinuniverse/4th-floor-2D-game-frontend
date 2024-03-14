@@ -13,6 +13,7 @@ import java.util.Objects;
 public final class SessionManager {
 
     public static String pathToDatabase = "src/main/resources/com/shotinuniverse/db.db";
+    public static String packageProject = "com.shotinuniverse.fourthfloorgame";
     public static int resolutionWidth;
     public static int resolutionHeight;
     public static String serverName;

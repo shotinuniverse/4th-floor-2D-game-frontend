@@ -4,8 +4,6 @@ import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.*;
 import com.shotinuniverse.fourthfloorgamefrontend.repositories.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

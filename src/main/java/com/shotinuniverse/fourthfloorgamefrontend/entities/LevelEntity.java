@@ -1,5 +1,7 @@
 package com.shotinuniverse.fourthfloorgamefrontend.entities;
 
+import java.util.ArrayList;
+
 public class LevelEntity {
 
     private int id; // _id
@@ -7,6 +9,7 @@ public class LevelEntity {
     private String name;
     private int number;
     private Points charPosition; // char_position
+    private ArrayList<PlatformEntity> platformEntities;
 
     public int getId() {
         return id;
@@ -46,5 +49,13 @@ public class LevelEntity {
 
     public void setCharPosition(Points charPosition) {
         this.charPosition = charPosition;
+    }
+
+    public ArrayList<PlatformEntity> getPlatformEntities() {
+        return platformEntities;
+    }
+
+    public void setPlatformEntities(ArrayList<PlatformEntity> platformEntities) {
+        this.platformEntities = platformEntities;
     }
 }
