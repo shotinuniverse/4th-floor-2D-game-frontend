@@ -8,8 +8,7 @@ public class AnimationEntity {
     private String action;
     private int value;
     private int ownerId; // object_id
-    private String ownerClass; // class
-    private int inMove; // in_move
+    private int state; // state
 
     public int getId() {
         return id;
@@ -59,19 +58,11 @@ public class AnimationEntity {
         this.ownerId = ownerId;
     }
 
-    public String getOwnerClass() {
-        return ownerClass;
+    public int getState() {
+        return state;
     }
 
-    public void setOwnerClass(String ownerClass) {
-        this.ownerClass = ownerClass;
-    }
-
-    public int getInMove() {
-        return inMove;
-    }
-
-    public void setInMove(int inMove) {
-        this.inMove = inMove;
+    public void setState(int state) {
+        this.state = state;
     }
 }
