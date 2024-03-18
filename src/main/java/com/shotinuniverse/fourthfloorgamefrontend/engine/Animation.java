@@ -35,7 +35,12 @@ public class Animation {
 
         int currentFrame = Game.getCurrentFrame();
 
-        int numberOfAnimations = beginFramesAnimations.size() == 0 ? 0 : beginFramesAnimations.get(0).length;
+        int numberOfAnimations = 0;
+
+        if (beginFramesAnimations.size() > 0) {
+            int objectId = beginFramesAnimations.get(0)[0];
+            numberOfAnimations = beginFramesAnimations.stream().filter(object -> object[0] == objectId).toList().size();
+        }
 
         if (counterFramesAnimation == numberOfAnimations) {
             counterFramesAnimation = 0;
@@ -78,12 +83,16 @@ public class Animation {
         for (Integer[] animationInfo: beginFramesAnimations) {
             if (animationInfo[1] != currentFrame)
                 continue;
-            Rectangle rectangle = hitBoxes.get(animationInfo[0] - 1);
-            for (AnimationEntity animation : animations) {
-                if (animation.getId() == animationInfo[2]) {
-                    animateBasedOnAction(animation, rectangle);
-                    madeAnimate = true;
-                }
+            //Rectangle rectangle = hitBoxes.get(animationInfo[0] - 1);
+            AnimationEntity needAnimation = animations.stream()
+                    .filter(animation ->
+                        animationInfo[2].equals(animation.getId())
+                    )
+                    .findFirst().orElse(null);
+            if (needAnimation != null) {
+                Rectangle rectangle = hitBoxes.get(animationInfo[0] - 1);
+                animateBasedOnAction(needAnimation, rectangle);
+                madeAnimate = true;
             }
         }
 

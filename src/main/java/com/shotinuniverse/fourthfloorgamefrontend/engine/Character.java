@@ -59,9 +59,8 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
             inMove = false;
             if (numberFrameEndJump != 0) {
                 endJump();
-            } else {
-                return;
             }
+            return;
         }
 
         Set<KeyCode> keyCodes = getActiveKeys();
@@ -70,7 +69,6 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
             return;
         }
 
-        inMove = true;
         int countHitBoxes = hitBoxes.size() - 1;
         for (int i = 0; i <= countHitBoxes; i++) {
             Rectangle hitBox = hitBoxes.get(i);

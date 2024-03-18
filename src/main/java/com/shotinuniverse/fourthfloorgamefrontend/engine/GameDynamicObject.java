@@ -135,13 +135,14 @@ public class GameDynamicObject implements GameDynamicObjectInt {
                     || (x1 <= x2Platform && x2 >= x2Platform)) {
                 if (side == Side.BOTTOM) {
                     //if (y <= yPlatform && (y + 1 == yPlatform || y + gravity >= yPlatform)) {
-                    if ((y - 1 <= yPlatform && yPlatform <= y + 1) || y + gravity >= yPlatform) {
+                    if ((y <= yPlatform || Math.floor(y) == yPlatform) && (y + 1 == yPlatform || y + gravity >= yPlatform)) {
                         gravity = yPlatform - y;
                         break;
                     }
                 } else {
                     gravity = PhysicConst.characterGravity;
-                    if (y >= yPlatform && (y - 1 == yPlatform || y - speedY <= yPlatform)) {
+                    //if (y >= yPlatform && (y - 1 == yPlatform || y - speedY <= yPlatform)) {
+                    if (y >= yPlatform && (Math.round(y) - 1 == yPlatform || y - speedY <= yPlatform)) {
                         numberFrameEndJump = Game.getCurrentFrame() + 1;
                         break;
                     }
