@@ -37,7 +37,7 @@ public class Game extends Application {
     public void start(Stage primaryStage) {
 
         this.primaryStage = primaryStage;
-        this.runnable = true;
+        runnable = true;
 
         Map<String, Object> map = LevelBuilder.createLevel(levelNumber, root);
         character = (Character) map.get("character");
@@ -66,12 +66,7 @@ public class Game extends Application {
                         @Override
                         public void run() {
                             countFrames();
-
-                            characterAnimation.animateCharacterRest();
-                            characterAnimation.rollbackCharacterAnimate();
-                            character.move();
-                            character.collisionHandler(platformArrayList);
-                            SessionManager.scene.setRoot(root);
+                            executeSequenceActionsFrame();
                         }
                     });
                 }
@@ -82,9 +77,7 @@ public class Game extends Application {
             Main main = new Main();
             try {
                 main.start(primaryStage);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
+            } catch (SQLException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -93,6 +86,14 @@ public class Game extends Application {
             currentFrame += 1;
             if (currentFrame > framesPerSecond)
                 currentFrame = 1;
+        }
+
+        private void executeSequenceActionsFrame() {
+            characterAnimation.animateCharacterRest();
+            character.move();
+            character.collisionHandler(platformArrayList);
+            characterAnimation.animateCharacterMove();
+            SessionManager.scene.setRoot(root);
         }
     }
 }
