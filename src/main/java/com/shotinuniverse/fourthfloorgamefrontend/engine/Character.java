@@ -2,6 +2,7 @@ package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
 import com.shotinuniverse.fourthfloorgamefrontend.Game;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
+import com.shotinuniverse.fourthfloorgamefrontend.menu.Pause;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.input.KeyCode;
@@ -98,6 +99,15 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
             else if (haveMoveLeft(keyCodes)) {
                 xPos = hitBox.getX() - speedX;
                 hitBox.setX(xPos);
+            }
+            else if (keyCodes.contains(KeyCode.ESCAPE)) {
+                try {
+                    synchronized (Game.gameThread) {
+                        Game.gameThread.wait();
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
