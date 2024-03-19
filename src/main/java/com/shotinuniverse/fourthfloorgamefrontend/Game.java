@@ -16,21 +16,30 @@ import java.util.Map;
 
 public class Game extends Application {
 
-    private Stage primaryStage;
-    private Pane root;
-    private int levelNumber;
+    private static Stage primaryStage;
+    private static Pane root;
+    private final int levelNumber;
     Character character;
     ArrayList<LevelPlatform> platformArrayList;
     CharacterAnimation characterAnimation;
     public static int framesPerSecond = 60;
     public static int currentFrame;
     public static boolean runnable;
+    public static Thread gameThread;
 
     public Game(int levelNumber) {
         super();
 
         this.root = new Pane();
         this.levelNumber = levelNumber;
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public static Pane getRoot() {
+        return root;
     }
 
     @Override
@@ -48,8 +57,8 @@ public class Game extends Application {
         SessionManager.scene.setOnKeyReleased(character);
         SessionManager.scene.setRoot(root);
 
-        Thread t = new Thread(new DrawRunnable());
-        t.start();
+        gameThread = new Thread(new DrawRunnable(), "game");
+        gameThread.start();
     }
 
     public static int getCurrentFrame() {
