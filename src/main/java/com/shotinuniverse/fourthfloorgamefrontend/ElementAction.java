@@ -70,6 +70,9 @@ public class ElementAction {
                                 throw new RuntimeException(e);
                             }
                         }
+                        case "resume" -> {
+                            Game game = new Game(1);
+                        }
                     }
                 } else {
                     try {
