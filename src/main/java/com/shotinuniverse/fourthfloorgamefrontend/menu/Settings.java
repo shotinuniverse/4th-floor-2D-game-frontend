@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
+import static com.shotinuniverse.fourthfloorgamefrontend.menu.MenuBuilder.*;
 
 public class Settings extends Application {
 
@@ -16,7 +16,7 @@ public class Settings extends Application {
         Pane root = new Pane();
         String menuType = "Settings";
 
-        Map<String, Object> structureMenu = getStructureMenu(menuType);
+        Map<String, Object> structureMenu = getStructureMenu(menuType, this);
         paintMenu(primaryStage, root, structureMenu);
 
         SessionManager.scene.setRoot(root);

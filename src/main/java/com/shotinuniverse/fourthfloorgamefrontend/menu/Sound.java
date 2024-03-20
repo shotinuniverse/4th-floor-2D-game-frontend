@@ -7,8 +7,8 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.getStructureMenu;
-import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.paintMenu;
+import static com.shotinuniverse.fourthfloorgamefrontend.menu.MenuBuilder.getStructureMenu;
+import static com.shotinuniverse.fourthfloorgamefrontend.menu.MenuBuilder.paintMenu;
 
 public class Sound extends Application {
 
@@ -17,7 +17,7 @@ public class Sound extends Application {
         Pane root = new Pane();
         String menuType = "Sound";
 
-        Map<String, Object> structureMenu = getStructureMenu(menuType);
+        Map<String, Object> structureMenu = getStructureMenu(menuType, this);
         paintMenu(primaryStage, root, structureMenu);
 
         SessionManager.scene.setRoot(root);

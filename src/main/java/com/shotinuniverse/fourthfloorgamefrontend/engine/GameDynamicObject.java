@@ -1,6 +1,7 @@
 package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
 import com.shotinuniverse.fourthfloorgamefrontend.Game;
+import com.shotinuniverse.fourthfloorgamefrontend.common.KeyHandler;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import javafx.geometry.Bounds;
 import javafx.geometry.Side;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 import static com.shotinuniverse.fourthfloorgamefrontend.Game.runnable;
 
-public class GameDynamicObject implements GameDynamicObjectInt {
+public class GameDynamicObject extends KeyHandler implements GameDynamicObjectInt {
     public List<Rectangle> hitBoxes;
     public int speedX;
     public int speedY;
@@ -23,6 +24,8 @@ public class GameDynamicObject implements GameDynamicObjectInt {
     public boolean inMove;
 
     public GameDynamicObject(List<Rectangle> rectangleList, int objectId) {
+        super(true);
+
         this.hitBoxes = rectangleList;
         this.numberFrameEndJump = 0;
         this.onGround = false;
@@ -70,8 +73,8 @@ public class GameDynamicObject implements GameDynamicObjectInt {
             Rectangle hitBox = hitBoxes.get(i);
             yPos = hitBox.getY() + gravity;
             if (yPos > 1080) {
-                runnable = false;
-                Thread.currentThread().stop();
+                Game.runnable = false;
+                Game.gameThread.interrupt();
             } else {
                 hitBox.setY(yPos);
             }
@@ -103,6 +106,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
         return gravity;
     }
 
+    @Override
     public double checkHorizontalCollisionOnSegment(Rectangle hitBox,
                                                     ArrayList<LevelPlatform> platformArrayList,
                                                     Side side) {
