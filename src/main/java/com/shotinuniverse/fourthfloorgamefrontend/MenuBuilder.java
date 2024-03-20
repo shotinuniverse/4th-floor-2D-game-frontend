@@ -16,7 +16,7 @@ import java.util.*;
 public final class MenuBuilder {
 
     private static String className;
-    private static ArrayList<Object> formData = new ArrayList<Object>();
+    private static final ArrayList<Object> formData = new ArrayList<Object>();
 
     public static Map<String, Object> getStructureMenu(String type) throws SQLException {
         className = type;
