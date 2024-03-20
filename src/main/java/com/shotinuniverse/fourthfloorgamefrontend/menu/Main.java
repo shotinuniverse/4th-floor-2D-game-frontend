@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.*;
+import static com.shotinuniverse.fourthfloorgamefrontend.menu.MenuBuilder.*;
 
 public class Main extends Application {
 
@@ -20,7 +20,7 @@ public class Main extends Application {
         String menuType = "Main";
         Pane root = new Pane();
 
-        Map<String, Object> structureMenu = getStructureMenu(menuType);
+        Map<String, Object> structureMenu = getStructureMenu(menuType, this);
         paintMenu(stage, root, structureMenu);
 
         if (SessionManager.scene == null) {

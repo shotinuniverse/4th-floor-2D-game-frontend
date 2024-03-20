@@ -129,7 +129,7 @@ public class Animation {
     /**
      * Откатывает инициализированные анимации
      */
-    public void rollbackAnimate() {
+    public void clearAnimations() {
         counterFramesAnimation = 0;
         beginFramesAnimations.clear();
     }

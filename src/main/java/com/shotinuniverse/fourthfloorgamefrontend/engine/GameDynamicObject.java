@@ -73,8 +73,8 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
             Rectangle hitBox = hitBoxes.get(i);
             yPos = hitBox.getY() + gravity;
             if (yPos > 1080) {
-                runnable = false;
-                Thread.currentThread().stop();
+                Game.runnable = false;
+                Game.gameThread.interrupt();
             } else {
                 hitBox.setY(yPos);
             }
@@ -106,6 +106,7 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
         return gravity;
     }
 
+    @Override
     public double checkHorizontalCollisionOnSegment(Rectangle hitBox,
                                                     ArrayList<LevelPlatform> platformArrayList,
                                                     Side side) {

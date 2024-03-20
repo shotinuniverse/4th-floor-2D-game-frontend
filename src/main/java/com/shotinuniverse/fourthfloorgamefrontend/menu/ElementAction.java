@@ -1,5 +1,6 @@
-package com.shotinuniverse.fourthfloorgamefrontend;
+package com.shotinuniverse.fourthfloorgamefrontend.menu;
 
+import com.shotinuniverse.fourthfloorgamefrontend.Game;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.Character;
 import com.shotinuniverse.fourthfloorgamefrontend.engine.PhysicConst;
@@ -40,6 +41,7 @@ public class ElementAction {
         Pane pane = (Pane) additionalInfo.get("group");
         String className = (String) additionalInfo.get("className");
         ArrayList<Object> addData = (ArrayList<Object>) additionalInfo.get("data");
+        Object owner = additionalInfo.get("owner");
 
         EventHandler<MouseEvent> leftClickHandler = event -> {
             if (MouseButton.PRIMARY.equals(event.getButton())){
@@ -71,7 +73,9 @@ public class ElementAction {
                             }
                         }
                         case "resume" -> {
-                            Game game = new Game(1);
+                            Pause pause = (Pause) owner;
+                            Game game = pause.getGameClass();
+                            game.resumeAfterPause();
                         }
                     }
                 } else {

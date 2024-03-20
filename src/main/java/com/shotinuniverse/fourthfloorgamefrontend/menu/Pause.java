@@ -8,8 +8,8 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.getStructureMenu;
-import static com.shotinuniverse.fourthfloorgamefrontend.MenuBuilder.paintMenu;
+import static com.shotinuniverse.fourthfloorgamefrontend.menu.MenuBuilder.getStructureMenu;
+import static com.shotinuniverse.fourthfloorgamefrontend.menu.MenuBuilder.paintMenu;
 
 public class Pause extends Application {
 
@@ -19,12 +19,20 @@ public class Pause extends Application {
         gameClass = parentClass;
     }
 
+    public static Game getGameClass() {
+        return gameClass;
+    }
+
+    public static void setGameClass(Game gameClass) {
+        Pause.gameClass = gameClass;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
         String menuType = "Pause";
 
-        Map<String, Object> structureMenu = getStructureMenu(menuType);
+        Map<String, Object> structureMenu = getStructureMenu(menuType, this);
         paintMenu(primaryStage, root, structureMenu);
 
         SessionManager.scene.setRoot(root);

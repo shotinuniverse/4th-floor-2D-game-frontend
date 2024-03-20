@@ -61,9 +61,10 @@ public class Game extends Application {
         gameThread.start();
     }
 
-    public static void resumeAfterPause(Pane gameRoot, int frame) {
-        SessionManager.scene.setRoot(gameRoot);
-        currentFrame = frame - 1;
+    public void resumeAfterPause() {
+        SessionManager.scene.setRoot(root);
+        currentFrame = currentFrame - 1;
+        gameThread = new Thread(new DrawRunnable(), "game");
         gameThread.start();
     }
 
@@ -115,10 +116,10 @@ public class Game extends Application {
         }
 
         private void executeSequenceActionsFrame() {
-            characterAnimation.animateCharacterRest();
+            characterAnimation.animateRest();
             character.characterKeyHandler();
             character.collisionHandler(platformArrayList);
-            characterAnimation.animateCharacterMove();
+            characterAnimation.animateMove();
             SessionManager.scene.setRoot(root);
         }
     }
