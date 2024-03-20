@@ -12,50 +12,18 @@ import javafx.scene.shape.Rectangle;
 import java.sql.SQLException;
 import java.util.*;
 
-public class Character extends GameDynamicObject implements EventHandler<KeyEvent> {
-    private final Set<KeyCode> KEY_UP = new HashSet<>();
-    private final Set<KeyCode> KEY_RIGHT = new HashSet<>();
-    private final Set<KeyCode> KEY_DOWN = new HashSet<>();
-    private final Set<KeyCode> KEY_LEFT = new HashSet<>();
+public class Character extends GameDynamicObject {
     public int limitFramesJump = 10;
     Side sideJump;
-    private final Set<KeyCode> activeKeys = new HashSet<>();
 
     public Character(List<Rectangle> rectangleList) {
         super(rectangleList, 1);
-        setControlKeys();
     }
 
-    @Override
-    public void handle(KeyEvent event) {
-        if (KeyEvent.KEY_PRESSED.equals(event.getEventType())) {
-            activeKeys.add(event.getCode());
-        } else if (KeyEvent.KEY_RELEASED.equals(event.getEventType())) {
-            activeKeys.remove(event.getCode());
-        }
-    }
+    public void characterKeyHandler() {
+        Set<KeyCode> keyCodes = getActiveKeys();
+        handleServiceKeyPressed(keyCodes);
 
-    private void setControlKeys() {
-        String query = "select action_types.name as name, keys.value as value from keys as keys inner join action_types as action_types on keys.action = action_types._id";
-        try {
-            ArrayList<Object> arrayList = SqlQuery.getObjects(query);
-            for (Object object: arrayList) {
-                Map<String, Object> map = (HashMap) object;
-                if (map.get("name").equals("move forward"))
-                    KEY_RIGHT.add(KeyCode.valueOf((String) map.get("value")));
-                else if (map.get("name").equals("move back"))
-                    KEY_LEFT.add(KeyCode.valueOf((String) map.get("value")));
-                else if (map.get("name").equals("jump"))
-                    KEY_UP.add(KeyCode.valueOf((String) map.get("value")));
-                else if (map.get("name").equals("sneak"))
-                    KEY_DOWN.add(KeyCode.valueOf((String) map.get("value")));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void move() {
         if (!onGround){
             inMove = false;
             if (numberFrameEndJump != 0) {
@@ -64,83 +32,46 @@ public class Character extends GameDynamicObject implements EventHandler<KeyEven
             return;
         }
 
-        Set<KeyCode> keyCodes = getActiveKeys();
         if (keyCodes.size() == 0) {
             inMove = false;
             return;
         }
 
+        move(keyCodes);
+    }
+
+    public void move(Set<KeyCode> keyCodes) {
         int countHitBoxes = hitBoxes.size() - 1;
         for (int i = 0; i <= countHitBoxes; i++) {
             Rectangle hitBox = hitBoxes.get(i);
             double xPos;
-            if (haveMoveRight(keyCodes) && haveMoveUp(keyCodes)) {
+            if (pressedRight(keyCodes) && pressedUp(keyCodes)) {
                 sideJump = Side.RIGHT;
                 beginJump(hitBox);
                 if(i == countHitBoxes)
                     onGround = false;
             }
-            else if (haveMoveLeft(keyCodes) && haveMoveUp(keyCodes)) {
+            else if (pressedLeft(keyCodes) && pressedUp(keyCodes)) {
                 sideJump = Side.LEFT;
                 beginJump(hitBox);
                 if(i == countHitBoxes)
                     onGround = false;
             }
-            else if (haveMoveUp(keyCodes)) {
+            else if (pressedUp(keyCodes)) {
                 sideJump = Side.TOP;
                 beginJump(hitBox);
                 if(i == countHitBoxes)
                     onGround = false;
             }
-            else if (haveMoveRight(keyCodes)) {
+            else if (pressedRight(keyCodes)) {
                 xPos = hitBox.getX() + speedX;
                 hitBox.setX(xPos);
             }
-            else if (haveMoveLeft(keyCodes)) {
+            else if (pressedLeft(keyCodes)) {
                 xPos = hitBox.getX() - speedX;
                 hitBox.setX(xPos);
             }
-            else if (keyCodes.contains(KeyCode.ESCAPE)) {
-                try {
-                    synchronized (Game.gameThread) {
-                        Game.gameThread.wait();
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
         }
-    }
-
-    private boolean haveMoveRight(Set<KeyCode> keyCodes) {
-        boolean haveMove = false;
-        for (KeyCode keyRight: KEY_RIGHT) {
-            if (keyCodes.contains(keyRight))
-                haveMove = true;
-        }
-        return haveMove;
-    }
-
-    private boolean haveMoveLeft(Set<KeyCode> keyCodes) {
-        boolean haveMove = false;
-        for (KeyCode keyLeft: KEY_LEFT) {
-            if (keyCodes.contains(keyLeft))
-                haveMove = true;
-        }
-        return haveMove;
-    }
-
-    private boolean haveMoveUp(Set<KeyCode> keyCodes) {
-        boolean haveMove = false;
-        for (KeyCode keyUp: KEY_UP) {
-            if (keyCodes.contains(keyUp))
-                haveMove = true;
-        }
-        return haveMove;
-    }
-
-    public Set<KeyCode> getActiveKeys() {
-        return Collections.unmodifiableSet(activeKeys);
     }
 
     private void beginJump(Rectangle hitBox) {
