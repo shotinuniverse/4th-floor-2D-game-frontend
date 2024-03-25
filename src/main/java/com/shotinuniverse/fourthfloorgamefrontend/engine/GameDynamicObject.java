@@ -1,6 +1,7 @@
 package com.shotinuniverse.fourthfloorgamefrontend.engine;
 
 import com.shotinuniverse.fourthfloorgamefrontend.Game;
+import com.shotinuniverse.fourthfloorgamefrontend.common.KeyHandler;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import javafx.geometry.Bounds;
 import javafx.geometry.Side;
@@ -14,14 +15,17 @@ import java.util.Map;
 
 import static com.shotinuniverse.fourthfloorgamefrontend.Game.runnable;
 
-public class GameDynamicObject implements GameDynamicObjectInt {
+public class GameDynamicObject extends KeyHandler implements GameDynamicObjectInt {
     public List<Rectangle> hitBoxes;
     public int speedX;
     public int speedY;
     public int numberFrameEndJump;
     public boolean onGround;
+    public boolean inMove;
 
     public GameDynamicObject(List<Rectangle> rectangleList, int objectId) {
+        super(true);
+
         this.hitBoxes = rectangleList;
         this.numberFrameEndJump = 0;
         this.onGround = false;
@@ -41,8 +45,8 @@ public class GameDynamicObject implements GameDynamicObjectInt {
                 from
                     physic_properties as physic_properties
                 where
-                    _id = 1
-                """);
+                    _id = %d
+                """, objectId);
 
         Object object = SqlQuery.getObjectFromTable(query);
         Map<String, Object> map = (HashMap) object;
@@ -69,8 +73,8 @@ public class GameDynamicObject implements GameDynamicObjectInt {
             Rectangle hitBox = hitBoxes.get(i);
             yPos = hitBox.getY() + gravity;
             if (yPos > 1080) {
-                runnable = false;
-                Thread.currentThread().stop();
+                Game.runnable = false;
+                Game.gameThread.interrupt();
             } else {
                 hitBox.setY(yPos);
             }
@@ -78,7 +82,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
     }
 
     @Override
-    public double calculateGravity(int speedX, int speedY) {
+    public double calculateGravity(double beginX, double beginY, int speedX, int speedY) {
         return 0;
     }
 
@@ -94,7 +98,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
         } else {
             Rectangle head = hitBoxes.get(4);
             gravity = checkHorizontalCollisionOnSegment(head, platformArrayList, Side.TOP);
-            if (gravity != PhysicConst.characterGravity)
+            if (gravity > 0 && gravity != PhysicConst.characterGravity)
                 collisionDetected = true;
         }
 
@@ -102,6 +106,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
         return gravity;
     }
 
+    @Override
     public double checkHorizontalCollisionOnSegment(Rectangle hitBox,
                                                     ArrayList<LevelPlatform> platformArrayList,
                                                     Side side) {
@@ -114,7 +119,7 @@ public class GameDynamicObject implements GameDynamicObjectInt {
             gravity = PhysicConst.characterGravity;
             y = bounds.getMaxY();
         } else {
-            gravity = 0;
+            gravity = -1;
             y = bounds.getMinY();
         }
 
@@ -133,13 +138,13 @@ public class GameDynamicObject implements GameDynamicObjectInt {
                     || (x1 <= x1Platform && x2 >= x1Platform)
                     || (x1 <= x2Platform && x2 >= x2Platform)) {
                 if (side == Side.BOTTOM) {
-                    if (y <= yPlatform && (y + 1 == yPlatform || y + gravity >= yPlatform)) {
+                    if ((y <= yPlatform || Math.floor(y) == yPlatform) && (y + 1 == yPlatform || y + gravity >= yPlatform)) {
                         gravity = yPlatform - y;
                         break;
                     }
                 } else {
                     gravity = PhysicConst.characterGravity;
-                    if (y >= yPlatform && (y - 1 == yPlatform || y - speedY <= yPlatform)) {
+                    if (y >= yPlatform && (Math.round(y) - 1 == yPlatform || y - speedY <= yPlatform)) {
                         numberFrameEndJump = Game.getCurrentFrame() + 1;
                         break;
                     }

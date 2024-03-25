@@ -1,8 +1,9 @@
-package com.shotinuniverse.fourthfloorgamefrontend;
+package com.shotinuniverse.fourthfloorgamefrontend.menu;
 
 import com.shotinuniverse.fourthfloorgamefrontend.common.SqlQuery;
 import com.shotinuniverse.fourthfloorgamefrontend.common.SessionManager;
 import com.shotinuniverse.fourthfloorgamefrontend.entities.*;
+import com.shotinuniverse.fourthfloorgamefrontend.menu.ElementAction;
 import com.shotinuniverse.fourthfloorgamefrontend.repositories.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,10 +17,12 @@ import java.util.*;
 public final class MenuBuilder {
 
     private static String className;
-    private static ArrayList<Object> formData = new ArrayList<Object>();
+    private static Object classOwner;
+    private static final ArrayList<Object> formData = new ArrayList<Object>();
 
-    public static Map<String, Object> getStructureMenu(String type) throws SQLException {
+    public static Map<String, Object> getStructureMenu(String type, Object owner) throws SQLException {
         className = type;
+        classOwner = owner;
 
         String query = getQueryForMenu(type);
 
@@ -107,6 +110,7 @@ public final class MenuBuilder {
         additionalInfo.put("group", root);
         additionalInfo.put("data", formData);
         additionalInfo.put("className", className);
+        additionalInfo.put("owner", classOwner);
 
         String resource = itemEntity.getResource();
         String action = itemEntity.getAction();

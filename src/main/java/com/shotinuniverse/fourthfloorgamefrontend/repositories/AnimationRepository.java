@@ -30,8 +30,7 @@ public class AnimationRepository {
             animation.setAction((String) map.get("action"));
             animation.setValue((int) map.get("value"));
             animation.setOwnerId((int) map.get("object_id"));
-            animation.setOwnerClass((String) map.get("class"));
-            animation.setInMove((int) map.get("in_move"));
+            animation.setState((int) map.get("state"));
 
             arrayList.add(animation);
         }
@@ -48,9 +47,9 @@ public class AnimationRepository {
                     inner join hit_boxes as hit_boxes
                     on animations.object_id = hit_boxes._id
                 where
-                    hit_boxes.object_id = %d and animations.class = '%s'
+                    hit_boxes.object_id = %d
                 order by
                     animations.object_id asc, animations.frame_number asc
-                """, ownerId, SessionManager.packageProject + ".hitbox");
+                """, ownerId);
     }
 }

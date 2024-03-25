@@ -5,6 +5,8 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
+.idea/dataSources/
+.idea/shelf/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
@@ -42,3 +44,6 @@ bin/
 .DS_Store
 /.idea/workspace.xml
 /.idea/misc.xml
+/.idea/shelf/Uncommitted_changes_before_Merge_at_12_03_2024_18_55_[Changes]/shelved.patch
+/.idea/shelf/Changes.xml
+/.idea/shelf/Changes/shelved.patch

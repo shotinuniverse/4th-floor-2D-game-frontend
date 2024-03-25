@@ -16,16 +16,9 @@ public class SqlQuery {
     public static Map<String, Object> getObjectFromTable(String query) throws SQLException {
         resultSet = statement.executeQuery(query);
 
-        Map<String, Object> map = new HashMap();
-        while(resultSet.next()) {
-            for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
-                switch (resultSet.getMetaData().getColumnTypeName(i)){
-                    case "INTEGER": map.put(resultSet.getMetaData().getColumnName(i), resultSet.getInt(i)); break;
-                    case "TEXT": map.put(resultSet.getMetaData().getColumnName(i), resultSet.getString(i)); break;
-                }
-
-            }
-        }
+        Map<String, Object> map = new HashMap<>();
+        while(resultSet.next())
+            convertValueOnType(map);
 
         return map;
     }
@@ -33,20 +26,24 @@ public class SqlQuery {
     public static ArrayList<Object> getObjects(String query) throws SQLException {
         resultSet = statement.executeQuery(query);
 
-        ArrayList<Object> values = new ArrayList<Object>();
+        ArrayList<Object> values = new ArrayList<>();
         while(resultSet.next()) {
-            Map<String, Object> map = new HashMap();
-            for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
-                switch (resultSet.getMetaData().getColumnTypeName(i)) {
-                    case "INTEGER" -> map.put(resultSet.getMetaData().getColumnName(i), resultSet.getInt(i));
-                    case "TEXT" -> map.put(resultSet.getMetaData().getColumnName(i), resultSet.getString(i));
-                }
-            }
-
+            Map<String, Object> map = new HashMap<>();
+            convertValueOnType(map);
             values.add(map);
         }
 
         return values;
+    }
+
+    private static void convertValueOnType(Map<String, Object> map) throws SQLException {
+        for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+            switch (resultSet.getMetaData().getColumnTypeName(i)) {
+                case "INTEGER" -> map.put(resultSet.getMetaData().getColumnName(i), resultSet.getInt(i));
+                case "TEXT" -> map.put(resultSet.getMetaData().getColumnName(i), resultSet.getString(i));
+                case "REAL" -> map.put(resultSet.getMetaData().getColumnName(i), resultSet.getFloat(i));
+            }
+        }
     }
 
     public static void updateObject(String query) throws SQLException {
@@ -103,7 +100,7 @@ public class SqlQuery {
                     _id = %d) as value
                 left outer join available_values as av_values
                 on value._id = av_values.object_id
-                    and value._class = av_values.class    
+                    and value._class = av_values.class
             """, comboboxEntity.getValueColumn(),
                 comboboxEntity.getValueTable(),
                 comboboxEntity.getValueRowId());
@@ -118,7 +115,7 @@ public class SqlQuery {
             from
                 %s as tb
             where
-                _id = %d   
+                _id = %d
             """, textFieldEntity.getValueColumn(),
                 havePresentation ? ", tb.presentation as presentation" :  "" ,
                 textFieldEntity.getValueTable(),
@@ -134,7 +131,7 @@ public class SqlQuery {
             from
                 %s as tb
             where
-                _id = %d   
+                _id = %d
             """, sliderEntity.getValueColumn(),
                 sliderEntity.getValueTable(),
                 sliderEntity.getValueRowId());
