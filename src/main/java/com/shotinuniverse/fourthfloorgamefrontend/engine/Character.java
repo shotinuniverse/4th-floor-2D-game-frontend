@@ -8,11 +8,10 @@ import javafx.scene.shape.Rectangle;
 import java.util.*;
 
 public class Character extends GameDynamicObject {
-    public int limitFramesJump = 10;
     Side sideJump;
 
     public Character(List<Rectangle> rectangleList) {
-        super(rectangleList, 1);
+        super(rectangleList, 1, 10);
     }
 
     public void characterKeyHandler() {
@@ -21,8 +20,9 @@ public class Character extends GameDynamicObject {
 
         if (!onGround){
             inMove = false;
-            if (numberFrameEndJump != 0) {
-                endJump();
+            if (counterFrameJump != 0 ) {
+//            if (numberFrameEndJump != 0) {
+                endJump(sideJump);
             }
             return;
         }
@@ -42,7 +42,7 @@ public class Character extends GameDynamicObject {
             double xPos;
             if (pressedRight(keyCodes) && pressedUp(keyCodes)) {
                 sideJump = Side.RIGHT;
-                beginJump(hitBox);
+                beginJump(hitBox, sideJump);
                 if(i == countHitBoxes){
                     onGround = false;
                     inMove = true;
@@ -50,7 +50,7 @@ public class Character extends GameDynamicObject {
             }
             else if (pressedLeft(keyCodes) && pressedUp(keyCodes)) {
                 sideJump = Side.LEFT;
-                beginJump(hitBox);
+                beginJump(hitBox, sideJump);
                 if(i == countHitBoxes){
                     onGround = false;
                     inMove = true;
@@ -58,7 +58,7 @@ public class Character extends GameDynamicObject {
             }
             else if (pressedUp(keyCodes)) {
                 sideJump = Side.TOP;
-                beginJump(hitBox);
+                beginJump(hitBox, sideJump);
                 if(i == countHitBoxes)
                     onGround = false;
             }
@@ -74,66 +74,6 @@ public class Character extends GameDynamicObject {
                 if(i == countHitBoxes)
                     inMove = true;
             }
-        }
-    }
-
-    private void beginJump(Rectangle hitBox) {
-        if (!onGround) {
-            return;
-        }
-
-        int currentFrame = Game.getCurrentFrame();
-
-        editCoordinatesInJump(hitBox);
-
-        if(numberFrameEndJump == 0){
-            numberFrameEndJump = currentFrame + limitFramesJump;
-        }
-    }
-
-    private void endJump() {
-        int currentFrame = Game.getCurrentFrame();
-
-        int valueForComparison;
-        if (Game.framesPerSecond - limitFramesJump <= currentFrame && currentFrame <= Game.framesPerSecond && numberFrameEndJump > 60) {
-            valueForComparison = Game.framesPerSecond;
-        } else {
-            valueForComparison = numberFrameEndJump > Game.framesPerSecond ? numberFrameEndJump - Game.framesPerSecond : numberFrameEndJump;
-        }
-
-        if (currentFrame > valueForComparison) {
-            numberFrameEndJump = 0;
-            return;
-        }
-
-        for (Rectangle hitBox: hitBoxes) {
-            editCoordinatesInJump(hitBox);
-        }
-    }
-
-    private void editCoordinatesInJump(Rectangle hitBox) {
-        double yPos = hitBox.getY() - speedY;
-        if(yPos < 0 || yPos > 1080) {
-            Game.runnable = false;
-            Game.gameThread.interrupt();
-        } else {
-            hitBox.setY(yPos);
-        }
-
-        double xPos = 0;
-        double moveX = speedX * 1.7;
-        switch (sideJump) {
-            case RIGHT -> xPos = hitBox.getX() + moveX;
-            case LEFT -> xPos = hitBox.getX() - moveX;
-            case TOP -> xPos = hitBox.getX();
-        }
-
-        if (xPos < 0 || xPos > 1920) {
-            hitBox.setX(40);
-            numberFrameEndJump = 0;
-            return;
-        } else {
-            hitBox.setX(xPos);
         }
     }
 

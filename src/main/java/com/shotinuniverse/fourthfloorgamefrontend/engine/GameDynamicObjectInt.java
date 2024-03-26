@@ -10,7 +10,8 @@ public interface GameDynamicObjectInt {
     void setPhysic(int objectId) throws SQLException;
     void collisionHandler(ArrayList<LevelPlatform> platformArrayList);
     void setGravity(double gravity);
-    double calculateGravity(double beginX, double beginY, int speedX, int speedY);
+    double calculateJumpXByT(int currentFrame, double beginX, double speedX);
+    double calculateJumpYByT(int currentFrame, double beginY, double speedY);
     double checkCollisionsWithPlatforms(ArrayList<LevelPlatform> platformArrayList);
     double checkHorizontalCollisionOnSegment(Rectangle hitBox, ArrayList<LevelPlatform> platformArrayList, Side side);
 }
