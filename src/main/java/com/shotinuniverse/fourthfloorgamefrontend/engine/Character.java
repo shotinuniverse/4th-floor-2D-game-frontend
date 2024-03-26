@@ -8,7 +8,6 @@ import javafx.scene.shape.Rectangle;
 import java.util.*;
 
 public class Character extends GameDynamicObject {
-    Side sideJump;
 
     public Character(List<Rectangle> rectangleList) {
         super(rectangleList, 1, 20, 10);
@@ -22,7 +21,7 @@ public class Character extends GameDynamicObject {
             inMove = false;
             if (counterFrameJump != 0 ) {
 //            if (numberFrameEndJump != 0) {
-                endJump(sideJump);
+                endJump();
             }
             return;
         }
@@ -42,7 +41,7 @@ public class Character extends GameDynamicObject {
             Rectangle hitBox = hitBoxes.get(i);
             if (pressedRight(keyCodes) && pressedUp(keyCodes)) {
                 sideJump = Side.RIGHT;
-                beginJump(hitBox, sideJump);
+                beginJump(hitBox);
                 if(i == countHitBoxes){
                     onGround = false;
                     inMove = true;
@@ -50,7 +49,7 @@ public class Character extends GameDynamicObject {
             }
             else if (pressedLeft(keyCodes) && pressedUp(keyCodes)) {
                 sideJump = Side.LEFT;
-                beginJump(hitBox, sideJump);
+                beginJump(hitBox);
                 if(i == countHitBoxes){
                     onGround = false;
                     inMove = true;
@@ -58,7 +57,7 @@ public class Character extends GameDynamicObject {
             }
             else if (pressedUp(keyCodes)) {
                 sideJump = Side.TOP;
-                beginJump(hitBox, sideJump);
+                beginJump(hitBox);
                 if(i == countHitBoxes)
                     onGround = false;
             }

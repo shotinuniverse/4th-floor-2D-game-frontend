@@ -9,10 +9,9 @@ import java.util.ArrayList;
 public interface GameDynamicObjectInt {
     void setPhysic(int objectId) throws SQLException;
     void collisionHandler(ArrayList<LevelPlatform> platformArrayList);
-    void setGravity(double gravity);
-    double calculateRunXByT(int currentFrame, double beginX, double speedX, double accelerationX);
-    double calculateJumpXByT(int currentFrame, double beginX, double speedX);
-    double calculateJumpYByT(int currentFrame, double beginY, double speedY);
-    double checkCollisionsWithPlatforms(ArrayList<LevelPlatform> platformArrayList);
-    double checkHorizontalCollisionOnSegment(Rectangle hitBox, ArrayList<LevelPlatform> platformArrayList, Side side);
+    double calculateRunXByT(double beginX, double speedX, double accelerationX);
+    double calculateJumpXByT(double beginX, double speedX);
+    double calculateJumpYByT(double beginY, double speedY);
+    void changePositionObjectAtCollision(ArrayList<LevelPlatform> platformArrayList);
+    double checkHorizontalCollisionOnSegment(Rectangle hitBox, Rectangle hitBoxHead, ArrayList<LevelPlatform> platformArrayList);
 }

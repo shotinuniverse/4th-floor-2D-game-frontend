@@ -19,7 +19,7 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
     public List<Rectangle> hitBoxes;
     public int speedX;
     public int speedY;
-    //public int numberFrameEndJump;
+    Side sideJump;
     public int counterFrameJump;
     public int counterFrameRun;
     public boolean onGround;
@@ -33,7 +33,6 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
         super(true);
 
         this.hitBoxes = rectangleList;
-        //this.numberFrameEndJump = 0;
         this.counterFrameJump = 0;
         this.counterFrameRun = 0;
         this.onGround = false;
@@ -67,151 +66,93 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
 
     @Override
     public void collisionHandler(ArrayList<LevelPlatform> platformArrayList) {
-        double gravity = checkCollisionsWithPlatforms(platformArrayList);
-        setGravity(gravity);
+        onGround = false;
+        changePositionObjectAtCollision(platformArrayList);
     }
 
     @Override
-    public void setGravity(double gravity) {
-        if (onGround && gravity == PhysicConst.characterGravity)
-            return;
-
-        double yPos;
-
-        for (int i = 0; i < hitBoxes.size(); i++) {
-            Rectangle hitBox = hitBoxes.get(i);
-            yPos = hitBox.getY() + gravity;
-            hitBox.setY(yPos);
-        }
-    }
-
-    @Override
-    public double calculateRunXByT(int currentFrameAction, double beginX, double speedX, double accelerationX) {
-        int frame = Math.min(currentFrameAction, limitFramesAcceleration);
+    public double calculateRunXByT(double beginX, double speedX, double accelerationX) {
+        int frame = Math.min(counterFrameRun, limitFramesAcceleration);
         double accByT = accelerationX * Math.pow(frame, 2);
         return beginX + speedX * frame + accByT / 2;
     }
 
     @Override
-    public double calculateJumpXByT(int currentFrameAction, double beginX, double speedX) {
+    public double calculateJumpXByT(double beginX, double speedX) {
         // X(t) = x0 + v0 * cos Alfa * t
         return beginX + speedX;
     }
 
     @Override
-    public double calculateJumpYByT(int currentFrameAction, double beginY, double speedY) {
+    public double calculateJumpYByT(double beginY, double speedY) {
         // Y(t) = y0 + v0 * sin Alfa * t - gt^2/2
-        int frame = Math.min(currentFrameAction, limitFramesJump);
-        double gByT = 0.1 * Math.pow(currentFrameAction, 2);
+        int frame = Math.min(counterFrameJump, limitFramesJump);
+        double gByT = 0.1 * Math.pow(counterFrameJump, 2);
         double yByT = beginY - speedY * frame + gByT / 2;
         return yByT;
     }
 
     @Override
-    public double checkCollisionsWithPlatforms(ArrayList<LevelPlatform> platformArrayList) {
-        boolean collisionDetected = false;
-        double gravity;
-        //if(numberFrameEndJump == 0) {
-        if(counterFrameJump == 0) {
-            Rectangle foot = hitBoxes.get(0);
-            gravity = checkHorizontalCollisionOnSegment(foot, platformArrayList, Side.BOTTOM);
-            if (gravity != PhysicConst.characterGravity)
-                collisionDetected = true;
-        } else {
-            Rectangle head = hitBoxes.get(4);
-            gravity = checkHorizontalCollisionOnSegment(head, platformArrayList, Side.TOP);
-            if (gravity > 0 && gravity != PhysicConst.characterGravity)
-                collisionDetected = true;
+    public void changePositionObjectAtCollision(ArrayList<LevelPlatform> platformArrayList) {
+        Rectangle foot = hitBoxes.get(0);
+        Rectangle head = hitBoxes.get(4);
+
+        double gravity = checkHorizontalCollisionOnSegment(foot, head, platformArrayList);
+        if (gravity == 0 && counterFrameJump == 0 && !onGround) {
+            sideJump = Side.TOP;
+            gravity = calculateJumpYByT(0, 0);
+            counterFrameJump = limitFramesJump + 1;
         }
 
-        onGround = collisionDetected;
-        return gravity;
+        if (gravity != 0) {
+            for (int i = 0; i < hitBoxes.size(); i++) {
+                Rectangle hitBox = hitBoxes.get(i);
+                double yPos = hitBox.getY() + gravity;
+                hitBox.setY(yPos);
+            }
+        }
     }
 
     @Override
-    public double checkHorizontalCollisionOnSegment(Rectangle hitBox,
-                                                    ArrayList<LevelPlatform> platformArrayList,
-                                                    Side side) {
-        Bounds bounds = hitBox.getBoundsInParent();
-        double x1 = bounds.getMinX();
-        double x2 = bounds.getMaxX();
-        double y;
-//        double gravity;
-//        if (side == Side.BOTTOM) {
-//            gravity = PhysicConst.characterGravity;
-//            y = bounds.getMaxY();
-//        } else {
-//            gravity = -1;
-//            y = bounds.getMinY();
-//        }
-//
-//        for (LevelPlatform levelPlatform : platformArrayList) {
-//            Bounds platformBounds = levelPlatform.getHitBox().getBoundsInParent();
-//            double x1Platform = platformBounds.getMinX();
-//            double x2Platform = platformBounds.getMaxX();
-//            double yPlatform;
-//            if (side == Side.BOTTOM) {
-//                yPlatform = platformBounds.getMinY();
-//            } else {
-//                yPlatform = platformBounds.getMaxY();
-//            }
-//
-//            if ((x1Platform <= x1 && x2 <= x2Platform)
-//                    || (x1 <= x1Platform && x2 >= x1Platform)
-//                    || (x1 <= x2Platform && x2 >= x2Platform)) {
-//                if (side == Side.BOTTOM) {
-//                    if ((y <= yPlatform || Math.floor(y) == yPlatform) && (y + 1 == yPlatform || y + gravity >= yPlatform)) {
-//                        gravity = yPlatform - y;
-//                        break;
-//                    }
-//                } else {
-//                    gravity = PhysicConst.characterGravity;
-//                    if (y >= yPlatform && (Math.round(y) - 1 == yPlatform || y - speedY <= yPlatform)) {
-//                        //numberFrameEndJump = Game.getCurrentFrame() + 1;
-//                        counterFrameJump = limitFramesJump;
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-        double gByT;
+    public double checkHorizontalCollisionOnSegment(Rectangle hitBoxFoot, Rectangle hitBoxHead,
+                                                    ArrayList<LevelPlatform> platformArrayList) {
+        Bounds boundsFoot = hitBoxFoot.getBoundsInParent();
+        double x1Foot = boundsFoot.getMinX();
+        double x2Foot = boundsFoot.getMaxX();
+        double yMaxFoot = boundsFoot.getMaxY();
+
+        Bounds boundsHead = hitBoxHead.getBoundsInParent();
+        double x1Head = boundsHead.getMinX();
+        double x2Head = boundsHead.getMaxX();
+        double yMinHead = boundsHead.getMinY();
+
+        double newPotentialYFoot = calculateJumpYByT(yMaxFoot, 1.2);
+        double newPotentialYHead = calculateJumpYByT(yMinHead, 1.2);
         double gravity = 0;
-        if (side == Side.BOTTOM) {
-            //gravity = PhysicConst.characterGravity;
-            gByT = 0.1 * Math.pow(counterFrameJump, 2);
-            y = bounds.getMaxY();
-        } else {
-            gByT = -1;
-            y = bounds.getMinY();
-        }
 
         for (LevelPlatform levelPlatform : platformArrayList) {
             Bounds platformBounds = levelPlatform.getHitBox().getBoundsInParent();
             double x1Platform = platformBounds.getMinX();
             double x2Platform = platformBounds.getMaxX();
-            double yPlatform;
-            if (side == Side.BOTTOM) {
-                yPlatform = platformBounds.getMinY();
-            } else {
-                yPlatform = platformBounds.getMaxY();
-            }
+            double yPlatformMin = platformBounds.getMinY();
+            double yPlatformMax = platformBounds.getMaxY();
 
-            if ((x1Platform <= x1 && x2 <= x2Platform)
-                    || (x1 <= x1Platform && x2 >= x1Platform)
-                    || (x1 <= x2Platform && x2 >= x2Platform)) {
-                if (side == Side.BOTTOM) {
-                    if ((y <= yPlatform || Math.floor(y) == yPlatform) && (y + 1 == yPlatform || y + gByT >= yPlatform)) {
-                        gravity = yPlatform - y;
-                        break;
-                    }
-                } else {
-                    gravity = PhysicConst.characterGravity;
-                    if (y >= yPlatform && (Math.round(y) - 1 == yPlatform || y - speedY <= yPlatform)) {
-                        //numberFrameEndJump = Game.getCurrentFrame() + 1;
-                        counterFrameJump = limitFramesJump;
-                        break;
-                    }
-                }
+            if (((x1Platform <= x1Foot && x2Foot <= x2Platform)
+                    || (x1Foot <= x1Platform && x2Foot >= x1Platform)
+                    || (x1Foot <= x2Platform && x2Foot >= x2Platform))
+                    && (yMaxFoot <= yPlatformMin || (yMaxFoot - 3 < yPlatformMin && yPlatformMin < yMaxFoot + 3))
+                    && (yMaxFoot + 1 == yPlatformMin || newPotentialYFoot >= yPlatformMin)) {
+                gravity = yPlatformMin - yMaxFoot;
+                counterFrameJump = 0;
+                onGround = true;
+                break;
+            } else if (((x1Platform <= x1Head && x2Head <= x2Platform)
+                    || (x1Head <= x1Platform && x2Head >= x1Platform)
+                    || (x1Head <= x2Platform && x2Head >= x2Platform))
+                    && yMinHead >= yPlatformMax && newPotentialYHead <= yPlatformMax) {
+                gravity = calculateJumpYByT(0, 1.2);
+                counterFrameJump = limitFramesJump + 1;
+                break;
             }
         }
 
@@ -232,11 +173,11 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
             accelerationX = acceleration;
         }
 
-        double xByT = calculateRunXByT(counterFrameRun, hitBox.getX(), moveX, accelerationX);
+        double xByT = calculateRunXByT(hitBox.getX(), moveX, accelerationX);
         hitBox.setX(xByT);
     }
 
-    public void beginJump(Rectangle hitBox, Side sideJump) {
+    public void beginJump(Rectangle hitBox) {
         if (!onGround) {
             return;
         }
@@ -245,21 +186,25 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
             counterFrameJump = 1;
         }
 
-        editCoordinatesInJump(hitBox, sideJump);
+        editCoordinatesInJump(hitBox);
     }
 
-    public void endJump(Side sideJump) {
+    public void endJump() {
         if (counterFrameJump == 0)
             return;
 
-        counterFrameJump += 1;
+        // прыжок уже начат в первом кадре
+        if (counterFrameJump == 1)
+            counterFrameJump = 2;
 
         for (Rectangle hitBox: hitBoxes) {
-            editCoordinatesInJump(hitBox, sideJump);
+            editCoordinatesInJump(hitBox);
         }
+
+        counterFrameJump += 1;
     }
 
-    private void editCoordinatesInJump(Rectangle hitBox, Side sideJump) {
+    private void editCoordinatesInJump(Rectangle hitBox) {
         double moveX = speedX * 2;
         switch (sideJump) {
             case LEFT -> moveX = -moveX;
@@ -268,8 +213,8 @@ public class GameDynamicObject extends KeyHandler implements GameDynamicObjectIn
 
         double moveY = 1.2;
 
-        double xPos = calculateJumpXByT(counterFrameJump, hitBox.getX(), moveX);
-        double yPos = calculateJumpYByT(counterFrameJump, hitBox.getY(), moveY);
+        double xPos = calculateJumpXByT(hitBox.getX(), moveX);
+        double yPos = calculateJumpYByT(hitBox.getY(), moveY);
 
         hitBox.setX(xPos);
         hitBox.setY(yPos);
