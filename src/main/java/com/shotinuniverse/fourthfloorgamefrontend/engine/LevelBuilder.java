@@ -71,6 +71,9 @@ public final class LevelBuilder {
 
         ArrayList<PlatformEntity> platformEntities = levelEntity.getPlatformEntities();
         for (PlatformEntity entity: platformEntities) {
+            if(entity.getVisible() == 0)
+                continue;
+
             Rectangle rectangle = new Rectangle(entity.getPointX(),
                     entity.getPointY(), entity.getWidth(), entity.getHeight());
 

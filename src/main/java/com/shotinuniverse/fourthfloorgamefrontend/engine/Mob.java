@@ -12,7 +12,7 @@ public class Mob extends GameDynamicObject {
     Side sideJump;
 
     public Mob(List<Rectangle> rectangleList) {
-        super(rectangleList, 1, 10);
+        super(rectangleList, 1, 10, 4);
     }
 
     public void move(Set<KeyCode> keyCodes) {

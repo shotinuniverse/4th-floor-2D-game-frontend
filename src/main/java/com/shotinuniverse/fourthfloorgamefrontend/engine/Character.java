@@ -11,7 +11,7 @@ public class Character extends GameDynamicObject {
     Side sideJump;
 
     public Character(List<Rectangle> rectangleList) {
-        super(rectangleList, 1, 10);
+        super(rectangleList, 1, 20, 10);
     }
 
     public void characterKeyHandler() {
@@ -29,6 +29,7 @@ public class Character extends GameDynamicObject {
 
         if (keyCodes.size() == 0) {
             inMove = false;
+            counterFrameRun = 0;
             return;
         }
 
@@ -39,7 +40,6 @@ public class Character extends GameDynamicObject {
         int countHitBoxes = hitBoxes.size() - 1;
         for (int i = 0; i <= countHitBoxes; i++) {
             Rectangle hitBox = hitBoxes.get(i);
-            double xPos;
             if (pressedRight(keyCodes) && pressedUp(keyCodes)) {
                 sideJump = Side.RIGHT;
                 beginJump(hitBox, sideJump);
@@ -63,16 +63,18 @@ public class Character extends GameDynamicObject {
                     onGround = false;
             }
             else if (pressedRight(keyCodes)) {
-                xPos = hitBox.getX() + speedX;
-                hitBox.setX(xPos);
-                if(i == countHitBoxes)
+                running(hitBox, Side.RIGHT);
+                if(i == countHitBoxes) {
                     inMove = true;
+                    counterFrameRun += 1;
+                }
             }
             else if (pressedLeft(keyCodes)) {
-                xPos = hitBox.getX() - speedX;
-                hitBox.setX(xPos);
-                if(i == countHitBoxes)
+                running(hitBox, Side.LEFT);
+                if(i == countHitBoxes) {
                     inMove = true;
+                    counterFrameRun += 1;
+                }
             }
         }
     }

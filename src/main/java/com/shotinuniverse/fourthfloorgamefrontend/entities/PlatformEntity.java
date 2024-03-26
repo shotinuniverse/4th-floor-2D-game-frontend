@@ -6,6 +6,7 @@ public class PlatformEntity extends Points {
     private String dbClass; // _class
     private String image;
     private String  owner; // _owner
+    private int visible;
 
     public int getId() {
         return id;
@@ -37,5 +38,13 @@ public class PlatformEntity extends Points {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public int getVisible() {
+        return visible;
+    }
+
+    public void setVisible(int visible) {
+        this.visible = visible;
     }
 }

@@ -51,6 +51,7 @@ public class LevelRepository {
             platformEntity.setDbClass((String) mapPlatform.get("_class"));
             platformEntity.setImage((String) mapPlatform.get("image"));
             platformEntity.setOwner((String) mapPlatform.get("owner"));
+            platformEntity.setVisible((int) mapPlatform.get("visible"));
             platformEntity.setPointX((int) mapPlatform.get("pointX"));
             platformEntity.setPointY((int) mapPlatform.get("pointY"));
             platformEntity.setWidth((int) mapPlatform.get("width"));
